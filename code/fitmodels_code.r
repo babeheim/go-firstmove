@@ -1,5 +1,7 @@
 rm(list=ls())
 
+library(glmer2stan)
+
 source('./code/project_functions.r')
 source('./code/project_variables.r')
 
@@ -72,28 +74,57 @@ d$fourfourxb.win.44 <- d$fourfour*d$b.win.44
 
 d$b.44xb.win <- d$b.44 * d$b.win
 
+colnames(d) <- gsub("\\.", "_", colnames(d))
+
+d$bin_total <- 1
+
 write.csv(d, './temp/fourfour_final.csv', row.names=FALSE)
 
 # fit the 24 month model
-   		
-horizon24 <- glmer2stan(
-   fourfour ~ (1 + b.44 + pop.44 | PB.id) + (0 + b.44 + pop.44 | b.age.group) +
-	b.44 +
-	b.44xb.win.44 +
-	b.44xb.win +
-	b.win.44 +
-	pop.44 +
-	pop.44xpop.win.44 +
-	pop.44xb.win +
-	pop.win.44 +
-	komi,
-   data=d,
-   family="binomial",
-   warmup=1000,
-   iter=6000,
-   calcDIC=TRUE,	
-   initmethod="zero"
-) # maybe write a map2stan version?
+           
+# horizon24 <- glmer2stan(
+#    fourfour ~ (1 + b_44 + pop_44 | PB_id) + (0 + b_44 + pop_44 | b_age_group) +
+#     b_44 +
+#     b_44xb_win_44 +
+#     b_44xb_win +
+#     b_win_44 +
+#     pop_44 +
+#     pop_44xpop_win_44 +
+#     pop_44xb_win +
+#     pop_win_44 +
+#     komi,
+#    data=d,
+#    family="binomial",
+#    warmup=1000,
+#    iter=6000,
+#    calcDIC=TRUE,
+#    initmethod="zero"
+# ) # maybe write a map2stan version?
+
+library(rstan)
+
+dat_list <- list(
+
+    N = nrow(d),
+    fourfour = d$fourfour,
+    b_44 = d$b_44,
+    pop_44 = d$pop_44,
+    PB_id = d$PB_id,
+    b_age_group = d$b_age_group,
+    b_44xb_win_44 = d$b_44xb_win_44,
+    b_44xb_win = d$b_44xb_win,
+    b_win_44 = d$b_win_44,
+    pop_44xpop_win_44 = d$pop_44xpop_win_44,
+    pop_44xb_win = d$pop_44xb_win,
+    pop_win_44 = d$pop_win_44,
+    komi = d$komi,
+    bin_total = d$bin_total,
+    N_PB_id = length(unique(d$PB_id)),
+    N_b_age_group = length(unique(d$b_age_group))
+
+)
+
+horizon24 <- stan(file="./inputs/horizon24.stan", data=dat_list, iter = 2000, chains=3)
 
 save(horizon24, file="./temp/horizon24.robj")  
 
@@ -103,8 +134,8 @@ cat(task.timer("Fit 24-month model."), file="./temp/fitmodels_log.txt")
 
 dir_init('./output')
 files <- c('./temp/horizon24.robj', 
-	'./temp/fitmodels_log.txt',
-	'./temp/fourfour_final.csv')
+    './temp/fitmodels_log.txt',
+    './temp/fourfour_final.csv')
 file.copy(files, './output')
 
 if(!save_temp) unlink('./temp', recursive=TRUE)

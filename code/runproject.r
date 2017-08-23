@@ -28,6 +28,7 @@ files <- c('./code/project_functions.r',
 file.copy(files, './fitmodels/code')
 dir_init('./fitmodels/inputs')
 files <- list.files('./buildregressiontable/output', full.names=TRUE, pattern='.csv')
+files <- c(files, "./inputs/horizon24.stan")
 file.copy(files, './fitmodels/inputs')
 setwd('./fitmodels')
 source('./code/fitmodels_code.r')
