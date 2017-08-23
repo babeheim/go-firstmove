@@ -1,4 +1,5 @@
 
+
 texttab <- function(input.matrix, alignment=NA, hlines=NA, caption="", scale=NA){
 	output <- character(nrow(input.matrix))
 	for(i in 1:nrow(input.matrix)){
