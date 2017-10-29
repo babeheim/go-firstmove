@@ -68,10 +68,10 @@ writeLines(output, './temp/table1.txt')
 
 # players averaged by nationality...
 
-JP.cols <- sort(unique(d$PB.id[d$BN=="Japanese"]))
-CH.cols <- sort(unique(d$PB.id[d$BN=="Chinese"]))
-SK.cols <- sort(unique(d$PB.id[d$BN=="Korean"]))
-TW.cols <- sort(unique(d$PB.id[d$BN=="Taiwanese"]))
+JP.cols <- sort(unique(d$PB_id[d$BN=="Japanese"]))
+CH.cols <- sort(unique(d$PB_id[d$BN=="Chinese"]))
+SK.cols <- sort(unique(d$PB_id[d$BN=="Korean"]))
+TW.cols <- sort(unique(d$PB_id[d$BN=="Taiwanese"]))
 
 japanese.beta.intercepts <- colMeans(p$vary_PB_id[,JP.cols,2])
 japanese.gamma.intercepts <- colMeans(p$vary_PB_id[,JP.cols,3])
@@ -201,7 +201,7 @@ text(-0.05, 0.74, "+10% perf.", col=my.col)
 d$fourfour <- as.numeric(d$fourfour)
 
 these <- sample(1:nrow(d), 2000)
-points(d$pop.44[these], jitter(d$fourfour[these], factor=0.5), col=col.alpha("gray", 0.5), pch=20, cex=0.5)
+points(d$pop_44[these], jitter(d$fourfour[these], factor=0.5), col=col.alpha("gray", 0.5), pch=20, cex=0.5)
 
 dev.off()
 
@@ -285,7 +285,7 @@ player.gamma.effects <- colMeans(p$vary_PB_id[,,3]) + mean(p$beta_pop_44)
 points(player.beta.effects, player.gamma.effects)
 
 targets <- c("Peng Quan", "Kato Atsushi", "Takemiya Masaki", "Hashimoto Shoji", "Yi Seong-chae", "Cho Hun-hyeon")
-target.ids <- unique(d$PB.id[d$PB %in% targets])
+target.ids <- unique(d$PB_id[d$PB %in% targets])
 
 points(player.beta.effects[target.ids], player.gamma.effects[target.ids], pch=20, col='red')
 
@@ -302,7 +302,7 @@ par(family="Times")
 my.cols <- brewer.pal(6, "Spectral")
 
 set.seed(1000)
-thin <- sample(1:5000, 1000)
+thin <- sample(1:3000, 1000) 
 
 plot(c(-4, 10), c(-10, 16), col="white", pch=20, xlab="reliance on individual information", ylab="reliance on social information", las=1)
 
@@ -311,7 +311,7 @@ target.name.list <- character(0)
 
 target <- "Peng Quan"
 target.col <- my.cols[1]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- as.numeric(target.id)
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -319,7 +319,7 @@ points(p$vary_PB_id[thin,i,2]+mean(p$beta_b_44[thin]), p$vary_PB_id[thin,i,3]+me
 
 target <- "Kato Atsushi"
 target.col <- my.cols[2]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- target.id
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -327,7 +327,7 @@ points(p$vary_PB_id[thin,i,2]+mean(p$beta_b_44[thin]), p$vary_PB_id[thin,i,3]+me
 
 target <- "Takemiya Masaki"
 target.col <- my.cols[3]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- target.id
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -335,7 +335,7 @@ points(p$vary_PB_id[thin,i,2]+mean(p$beta_b_44[thin]), p$vary_PB_id[thin,i,3]+me
 
 target <- "Hashimoto Shoji"
 target.col <- my.cols[4]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- target.id
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -343,7 +343,7 @@ points(p$vary_PB_id[thin,i,2]+mean(p$beta_b_44[thin]), p$vary_PB_id[thin,i,3]+me
 
 target <- "Yi Se-tol"
 target.col <- my.cols[5]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- target.id
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -351,7 +351,7 @@ points(p$vary_PB_id[thin,i,2]+mean(p$beta_b_44[thin]), p$vary_PB_id[thin,i,3]+me
 
 target <- "Cho Hun-hyeon"
 target.col <- my.cols[6]
-target.id <- unique(d$PB.id[d$PB==target])
+target.id <- unique(d$PB_id[d$PB==target])
 i <- target.id
 target.name.list <- c(target.name.list, target)
 target.id.list <- c(target.id.list, target.id)
@@ -376,7 +376,7 @@ for(i in 1:length(target.id.list)){
 }
 
 # age 8 is "1", age 9 is "2", etc.
-n.ages <- length(unique(d$b.age.group))
+n.ages <- length(unique(d$b_age_group))
 	
 my.pop.means <- apply(p$vary_b_age_group[,,2], 2, mean)+mean(p$beta_pop_44)
 my.pop.HPDI <- apply(p$vary_b_age_group[,,2], 2, HPDI)+mean(p$beta_pop_44)
