@@ -2,7 +2,6 @@
 rm(list=ls())
 
 source('./code/project_functions.r')
-source('./code/project_variables.r')
 
 dir_init('./temp')
 

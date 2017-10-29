@@ -49,9 +49,9 @@ Thumbs.db
 *.Rapp.history
 *.Rhistory
 
-/buildregressiontable/*
-/compilemanuscript/*
-/describemodels/*
-/fitmodels/*
+/build_table/*
+/compile_manuscript/*
+/describe_models/*
+/fit_models/*
 /log/*
 /output/*

@@ -1,8 +1,11 @@
 
 
-library(rethinking)
-library(RColorBrewer)
-library(glmer2stan)
+save_temp <- TRUE
+
+library(rethinking)   # needed for model exploration
+library(rstan)
+library(RColorBrewer) # needed for figures
+# library(glmer2stan) # now runs directly from stan, on glmer2stan's model
 
 
 texttab <- function(input.matrix, alignment=NA, hlines=NA, caption="", scale=NA){
@@ -41,6 +44,15 @@ dir_init <- function(path, verbose=FALSE){
 	if(dir.exists(path)) unlink(path, recursive=TRUE)
 	dir.create(path)
 }
+
+module_init <- function(path, verbose=FALSE){
+    code_path <- paste(path, '/code', sep='')
+    inputs_path <- paste(path, '/inputs', sep='')
+    dir_init(path, verbose=verbose)
+    dir_init(code_path, verbose=verbose)
+    dir_init(inputs_path, verbose=verbose)
+}
+
 
 task.timer <- function(task="", start=start.time, stop=stop.time){
 	time.diff <- round(as.numeric(difftime(stop, start, units="mins")), 1)

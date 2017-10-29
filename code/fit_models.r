@@ -1,9 +1,6 @@
 rm(list=ls())
 
-library(glmer2stan)
-
 source('./code/project_functions.r')
-source('./code/project_variables.r')
 
 dir_init('./temp')
 
@@ -100,8 +97,6 @@ write.csv(d, './temp/fourfour_final.csv', row.names=FALSE)
 #    calcDIC=TRUE,
 #    initmethod="zero"
 # ) # maybe write a map2stan version?
-
-library(rstan)
 
 dat_list <- list(
 

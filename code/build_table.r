@@ -1,7 +1,6 @@
 rm(list=ls())
 
 source('./code/project_functions.r')
-source('./code/project_variables.r')
 
 dir_init('./temp')
 
@@ -11,7 +10,7 @@ start.time <- Sys.time()
 #### Final Data Cleaning ####
 #########################
 
-gogod <- read.csv("./inputs/gogod_gamedata_c.csv", as.is=TRUE) # 60337 x 18
+gogod <- read.csv("./inputs/gogod_gamedata_c.csv", stringsAsFactors=FALSE) # 60337 x 18
 
 years <- as.numeric(substr(gogod[,"DT"], 1, 4))
 keep <- which(years >= 1954)
