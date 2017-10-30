@@ -119,7 +119,7 @@ dat_list <- list(
 
 )
 
-horizon24 <- stan(file="./inputs/horizon24.stan", data=dat_list, iter = 2000, chains=3)
+horizon24 <- stan(file="./inputs/horizon24.stan", data=dat_list, iter = 2000, chains=3, cores=3)
 
 save(horizon24, file="./temp/horizon24.robj")  
 
