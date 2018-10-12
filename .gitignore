@@ -38,14 +38,12 @@ ehthumbs.db
 Thumbs.db
 
 # common binaries
-*.pdf
 *.docx
 *.xls
 
 # R Kruft
 *.Rhistory
 *.RData
-*.pdf
 *.Rapp.history
 *.Rhistory
 *.robj
