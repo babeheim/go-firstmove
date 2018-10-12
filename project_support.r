@@ -4,7 +4,7 @@ library(rstan)
 library(RColorBrewer) # needed for figures
 library(tictoc)
 
-scaffold <- TRUE
+scaffold <- FALSE
 save_temp <- TRUE
 
 texttab <- function(input.matrix, alignment=NA, hlines=NA, caption="", scale=NA){
