@@ -37,3 +37,17 @@ By default the analysis will delete all temporary files and folders, but if you 
 The total time until completion will vary by machine.
 
 The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at https://github.com/babeheim.
+
+## TODO
+
+- add more docstrings
+- rewrite tex into Rmd
+- remove task.timer and replace with tictoc
+- streamline the run_project script
+- reorganize project to have seperate folders for each module
+- run lintr
+- add kaya functionality?
+
+## Changelog
+
+2018-10-12:

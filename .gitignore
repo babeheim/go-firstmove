@@ -48,10 +48,10 @@ Thumbs.db
 *.pdf
 *.Rapp.history
 *.Rhistory
+*.robj
 
-/build_table/*
-/compile_manuscript/*
-/describe_models/*
-/fit_models/*
-/log/*
+
+*/inputs
+*/output
+*/temp
 /output/*

@@ -62,7 +62,7 @@ The East Asian board game known in the West as Go is, by players, one of the mos
 
 \begin{figure}[t]
 \begin{center} 
-\includegraphics[scale=1.3]{../inputs/figKifu.pdf}
+\includegraphics[scale=1.3]{./figKifu.pdf}
 \caption{A complete record, with SGF coordinates, for a 1978 game between Japanese professionals Takemiya Masaki and Kudo Norio.  Black (Takemiya) begins with a Fourfour at coordinate \textit{pd} (top right), with White (Kudo) responding at \textit{dd} with another Fourfour.  White won by resignation after 232 moves.  This game is one of the first successful uses of the \textit{dd} response to the Move 1 Fourfour, and \textit{dd} has subsequently become the dominant response among professionals (see Fig.~3).}
 \label{FigKifu}
 \end{center}
@@ -81,7 +81,7 @@ Despite the conservatism of opening play in professional games, novel variations
 
 \begin{figure}[h!]
 \begin{center} 
-\includegraphics[scale=1.2]{../inputs/figM1FreqsWins.pdf}
+\includegraphics[scale=1.2]{./figM1FreqsWins.pdf}
 \caption{The ebb and flow of the three major first move variants, with proportion of games won.  The Fourfour's rise and fall, here broken into four eras, closely tracks with its relative performance (\textit{top}) since 1967 ($r=0.45$).  Similarly, the Threethree's brief efflorescence and extinction closely match its relative win rate.  Because of its initial dominance, all win rates are expressed relative to the Threefour's, and the dotted gray line indicates the location of the 50\% (break-even) point.}
 \label{FigM1FreqsWins}
 \end{center}
@@ -89,7 +89,7 @@ Despite the conservatism of opening play in professional games, novel variations
 
 \begin{figure}[h!]
 \begin{center} 
-\includegraphics[scale=1.2]{../inputs/figM2FreqsWins.pdf}
+\includegraphics[scale=1.2]{./figM2FreqsWins.pdf}
 \caption{Frequency and performance for four major M2 responses to the Fourfour.  Performance for each is calculated as the win rate subtracting the average win rate of alternatives.  As at M1, a variants's frequency closely tracks its relative performance.  To compare with Fig.~2, we define four eras (I to IV) corresponding to the Fourfour's rise and fall.}
 \label{FigM2FreqsWins}
 \end{center}
@@ -122,7 +122,7 @@ Theoretical models and experiments have focused on two important forms of such s
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[scale=1.2]{../inputs/FigPr44xPop_COL.pdf}
+\includegraphics[scale=1.2]{./FigPr44xPop_COL.pdf}
 \caption{Predicted probability of using the Fourfour by an average player at different values of population use, with means (dotted lines) and 95\% HPDI (solid regions).  Per Table 1, the relative win rate of the Fourfour within the population regulates the effect of population use, -10\% versus the Threefour (orange), equal to the Threefour (light blue) and +10\% (dark blue).  Outcome data is also shown via scatterplot.}
 \label{FigPr44}
 \end{center}
@@ -142,7 +142,7 @@ Predictor variables for each game used a retrospective two-year window from the 
 \begin{table}[tbp]
   \centering
     \begin{tabular}{lrr}
-	\input{"../inputs/table1.txt"}
+	\input{"./table1.txt"}
     \end{tabular}%
 	\caption{Logistic regression estimates for Pr(Use Fourfour in game $i$)}
  \end{table}%
@@ -151,7 +151,7 @@ Predictor variables for each game used a retrospective two-year window from the 
 
 \begin{figure}[thp]
 \begin{center} 
-\includegraphics[scale=0.8]{../inputs/FigPlayerAgeBetaGamma_COL.pdf}
+\includegraphics[scale=0.8]{./FigPlayerAgeBetaGamma_COL.pdf}
 \caption{(\textit{left}) Six player-specific joint posterior densities of the importance of individual ($\beta_j$) and social ($\gamma_j$) information on predicting move outcome, along with the main effect density (black region).  Players who lie above the line of equality (solid gray) are more predicted by recent population trends than individual experience, while the reverse is true for players below it. (\textit{right}) Estimates for the importance of social knowledge for each year of age $k$, showing means and 95\% HPDI intervals.  Younger players tend to have values of $\gamma_k$ above the main effect mean $\gamma$ (dotted), but this declines as they age.}
 \label{FigPlayerAgeBetaGamma}
 \end{center}
@@ -178,7 +178,7 @@ According to player-specific posterior estimates in Fig.~5, the players who most
 \begin{table}[tbp]
   \centering
     \begin{tabular}{lrrrrr}
-	\input{"../inputs/table2.txt"}
+	\input{"./table2.txt"}
     \end{tabular}%
 	\caption{National averages of player-specific estimates of reliance on individual ($\beta_j$) and social ($\gamma_j$) information.}
 \end{table}%
