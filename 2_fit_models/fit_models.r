@@ -8,9 +8,9 @@ dir_init("./temp")
 
 d <- read.csv("./inputs/fourfour_regression_table_24m.csv")
 
-colnames(d) <- c("DT", "fourfour", "threefour", "threethree",
-  "first_row", "b_age", "b_win", "b_44", "b_win_44", "pop_44",
-  "pop_win_44", "pop_win", "PB", "BN", "komi", "BR", "black_won")
+colnames(d) <- c("DT", "fourfour", "first_row", "b_age", "b_win",
+  "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB",
+  "BN", "komi", "BR", "black_won")
 
 # 2-year cutoff
 years <- as.numeric(substr(d[, "DT"], 1, 4))
@@ -79,6 +79,9 @@ d$bin_total <- 1
 
 write.csv(d, "./temp/fourfour_final.csv", row.names = FALSE)
 
+print("prepped final data table for regression analysis")
+
+
 # fit the 24 month model
 
 dat_list <- list(
@@ -101,7 +104,7 @@ dat_list <- list(
 )
 
 horizon24 <- stan(file = "./stan/horizon24.stan", data = dat_list,
-  iter = 1, chains = 3, cores = 3)
+  iter = 2000, chains = 3, cores = 3)
 
 save(horizon24, file = "./temp/horizon24.robj")
 

@@ -41,8 +41,9 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 ## TODO
 
 - add more docstrings
-- run lintr
-- add kaya functionality?
 - clean up bibtex keys
 - confirm the `valid_range` object is really doing its job right
 - clean out project_support
+- remove the need for mirror_mirror
+- remove all moves except `fourfour`
+- rewrite code using data frames!

@@ -9,6 +9,8 @@ dir_init("./temp")
 gogod <- read.csv("./inputs/gogod_gamedata_c.csv", stringsAsFactors = FALSE)
 # 60337 x 18
 
+print("loaded game data")
+
 years <- as.numeric(substr(gogod[, "DT"], 1, 4))
 keep <- which(years >= 1954)
 
@@ -105,12 +107,7 @@ komi <- komi - modal(komi)
 # ok, let"s get those first moves
 
 raw_hits <- substr(gogod[, "move.string"], 4, 5)
-trans_hits <- sapply_pb(raw_hits, function(z) mirror_mirror(z)[1])
-fourfour <- as.numeric(trans_hits == "pd")
-threefour <- as.numeric(trans_hits == "qd")
-threethree <- as.numeric(trans_hits == "qc")
-fourfive <- as.numeric(trans_hits == "pe")
-threefive <- as.numeric(trans_hits == "qe")
+fourfour <- as.numeric(raw_hits %in% c("pd", "dp", "dd", "pp"))
 
 dates <- as.Date(gogod[, "DT"])
 dates_char <- as.character(dates)
@@ -125,6 +122,8 @@ for (i in 1:n_games) {
   first_row[i] <- date_pointer
 }
 
+
+print("identify date ranges")
 
 # ok, using the "valid range" calculate period-specific predictors
 
@@ -143,13 +142,11 @@ pop_win_cfrq_1p <- NA
 
 for (i in 1:n_games) {
 
-  valid_range <- game_index %in% first_row[i]:(i - 1)  # huh?
+  valid_range <- game_index %in% first_row[i]:(i - 1)
 
   use_cfrq_1p[i] <- mean(fourfour[valid_range]) - 0.5
   use_win_cfrq_1p[i] <- mean(black_won[valid_range & fourfour]) -
     mean(black_won[valid_range & !fourfour])
-  # population use win is relative to Threefour, not to average
-  # does this difference matter? I"ll have to change this and find out___
   pop_win_cfrq_1p[i] <- mean(black_won[valid_range])
 
   focal_player <- PB[i]
@@ -164,11 +161,12 @@ for (i in 1:n_games) {
   # personal use win rate is relative to personal average
 }
 
+print("calculate predictors based on dates")
+
+
 regression_table <- cbind(
   DT,
   fourfour,
-  threefour,
-  threethree,
   first_row,
   b_age,
   b_win_cfrq_1p,
