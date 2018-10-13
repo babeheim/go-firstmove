@@ -1,0 +1,144 @@
+%Notes to self on compiling without BibTeX
+%Compile original file as normal with BibTex, using bibunits
+%copy contents of bu1.bbl and paste into bibliography section
+%comment out \usepackage{bibunits} in preamble
+%comment out begin and end bibunit, and putbib
+%compile twice with XeLateX
+
+
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\documentclass[reqno,12pt]{amsart}
+\usepackage[foot]{amsaddr}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[paperwidth=8.5in,paperheight=11in,text={6in,9in},left=1.25in,top=1in,headheight=0.25in,headsep=0.4in,footskip=0.4in]{geometry}
+
+%citation format
+\usepackage[authoryear]{natbib}
+%use authoryear in brackets for conventional format
+% use "super" in brackets for numbers to biblio
+
+% \bibpunct[, ]{}{}{,}{s}{}{,}
+\bibpunct[, ]{(}{)}{,}{a}{}{,}
+%change s to a, and put open and closed parentheses in first two bracketed arguments for author-year citations
+
+\usepackage{subfigure}
+\usepackage{lineno}
+\usepackage{threeparttable}
+
+\usepackage{comment} %make block comments
+
+
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\E}{E}
+
+
+%get rid of red link boxes
+\usepackage{hyperref}
+%\usepackage{endfloat}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!80!black},
+    citecolor={blue!90!black},
+    urlcolor={blue!90!black}
+}
+
+%flexible hyperrefs
+%\usepackage{cleveref}
+
+%gives ability to fix figure locations with H
+\usepackage{float}
+
+%allows subsetting of bibliography units
+%\usepackage{bibunits}
+
+
+\synctex=1
+
+\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+  \renewenvironment{#1}%
+     {\linenomath\csname old#1\endcsname}%
+     {\csname oldend#1\endcsname\endlinenomath}}% 
+\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+  \patchAmsMathEnvironmentForLineno{#1}%
+  \patchAmsMathEnvironmentForLineno{#1*}}%
+\AtBeginDocument{%
+\patchBothAmsMathEnvironmentsForLineno{equation}%
+\patchBothAmsMathEnvironmentsForLineno{align}%
+\patchBothAmsMathEnvironmentsForLineno{flalign}%
+\patchBothAmsMathEnvironmentsForLineno{alignat}%
+\patchBothAmsMathEnvironmentsForLineno{gather}%
+\patchBothAmsMathEnvironmentsForLineno{multline}%
+}
+
+%\usepackage{lmodern}
+%\usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{mathspec}
+\usepackage{units}
+\usepackage{xltxtra}
+\usepackage{xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+%\setmainfont[Ligatures={Common}]{EB Garamond}
+%\setmathrm{EB Garamond}
+%\setmathfont(Digits,Latin)[Numbers={Lining,Proportional}]{EB Garamond}
+
+\definecolor{linenocolor}{gray}{0.5}
+\renewcommand\thelinenumber{\color{linenocolor}\arabic{linenumber}}
+
+\usepackage{fix-cm}
+
+\setcounter{totalnumber}{10}
+
+\newcommand{\mr}{\mathrm}
+\usepackage{hyperref}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+\makeatletter
+\newenvironment{startquote}[2][2em]
+  {\setlength{\@tempdima}{#1}%
+   \def\chapquote@author{#2}%
+   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
+   \itshape}
+  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
+\makeatother
+%\renewcommand{\baselinestretch}{1.5}
+
+\title[$short_title$]
+{\large $title$}
+\author{$author$}
+\address{$address$}
+\email{$email$}
+\date{$date$}
+
+\begin{document}
+%\begin{bibunit}[naturemag]
+
+
+%{\abstract \small . }
+
+%\renewcommand*\rmdefault{Minion}
+
+\linenumbers
+\modulolinenumbers[5]
+
+\maketitle
+
+%ABSTRACT
+%\begin{abstract}\normalsize
+\noindent\textsc{Abstract.}
+$abstract$
+%\end{abstract}
+ 
+\vspace{12pt}
+
+\vspace{24pt}
+% \newpage
+
+$body$
+
+\end{document}

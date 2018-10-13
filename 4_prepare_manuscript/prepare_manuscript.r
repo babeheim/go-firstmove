@@ -1,22 +1,49 @@
 
-if (scaffold) {
+
+if(scaffold == TRUE){
   rm(list = ls())
   source("../project_support.r")
 }
 
-dir_init("./temp")
+# stage 1: Rmarkdown to markdown
 
-file.copy("./tex/Go Paper.tex", "./temp")
-files <- list.files("./inputs", full.names = TRUE)
-file.copy(files, "./temp")
-files <- list.files("./assets", full.names = TRUE)
-file.copy(files, "./temp")
+file.copy('./Rmarkdown/manuscript.Rmd', ".", overwrite=TRUE)
+knit("./manuscript.Rmd")
+file.remove("./manuscript.Rmd")
 
-setwd("./temp")
-system("pdflatex 'Go Paper.tex'")
-setwd("..")
+dir_init('./markdown')
+file.copy('./manuscript.md', "./markdown")
+file.remove("./manuscript.md")
 
-dir_init("./output")
-file.copy("./temp/Go Paper.pdf", "./output")
+# Stage 2: markdown to tex
 
-if(!save_temp) unlink("./temp", recursive = TRUE)
+dir_init('./tex')
+system("pandoc ./markdown/manuscript.md --latex-engine=xelatex --template=./assets/go-template.tex -o ./tex/manuscript.tex")
+
+# Stage 3: compile tex into a pdf and docx
+
+dir_init('./temp')
+my_files <- list.files('./inputs', full.names = TRUE)
+my_files <- c(my_files, list.files('./assets', full.names = TRUE))
+my_files <- c(my_files, list.files('./tex', full.names = TRUE))
+file.copy(my_files, "./temp")
+setwd('./temp')
+system("xelatex manuscript")
+system("bibtex manuscript")
+system("xelatex manuscript")
+system("xelatex manuscript")
+
+# it would be good if the name of the bibliography was dynamic here
+# system("pandoc manuscript.tex --bibliography=citations.bib -smart -o ./manuscript.docx")
+
+setwd('..')
+
+dir_init('./output', overwrite=FALSE)
+file.copy("./temp/manuscript.pdf", "./output", overwrite=TRUE)
+# file.copy("./temp/manuscript.docx", "./output", overwrite=TRUE)
+
+if(!save_temp){
+  unlink('./markdown', recursive=TRUE)
+  unlink('./tex', recursive=TRUE)
+  unlink('./temp', recursive=TRUE)
+}
