@@ -3,6 +3,7 @@ library(rethinking)   # needed for model exploration
 library(rstan)
 library(RColorBrewer) # needed for figures
 library(tictoc)
+library(knitr)
 
 scaffold <- FALSE
 save_temp <- TRUE
