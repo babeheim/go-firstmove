@@ -6,7 +6,7 @@ library(tictoc)
 library(knitr)
 
 scaffold <- FALSE
-save_temp <- TRUE
+save_temp <- FALSE
 
 texttab <- function(input.matrix, alignment=NA, hlines=NA, caption="", scale=NA){
   output <- character(nrow(input.matrix))

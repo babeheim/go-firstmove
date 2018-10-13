@@ -41,13 +41,6 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 ## TODO
 
 - add more docstrings
-- rewrite tex into Rmd
-- remove task.timer and replace with tictoc
-- streamline the run_project script
-- reorganize project to have seperate folders for each module
 - run lintr
 - add kaya functionality?
-
-## Changelog
-
-2018-10-12:
+- clean up bibtex keys
