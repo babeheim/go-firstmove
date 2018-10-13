@@ -44,3 +44,5 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 - run lintr
 - add kaya functionality?
 - clean up bibtex keys
+- confirm the `valid_range` object is really doing its job right
+- clean out project_support

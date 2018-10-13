@@ -277,7 +277,7 @@ nemo.finder <- function(pattern=NA, data, box=c("as", "sa"), exclude.handi = T, 
   letter.grid <- sapply(letters[lb], function(x) paste(x, letters[lb], sep=""))
   box.corner.variations <- letter.grid[20-corners$y[1], corners$x[1]]
   box.corner.variations[2] <- letter.grid[20-corners$y[2], corners$x[2]]
-  box.corner.variations <- mirror.mirror(box.corner.variations, starting.orientation=original.orientation)
+  box.corner.variations <- mirror_mirror(box.corner.variations, starting.orientation=original.orientation)
   x.letters <- substr(box.corner.variations, 1, 1)
   y.letters <- substr(box.corner.variations, 2, 2)
   for(i in 1:8){
@@ -288,7 +288,7 @@ nemo.finder <- function(pattern=NA, data, box=c("as", "sa"), exclude.handi = T, 
     box.search.token[i] <- paste("[", x.side[1], "-", x.side[length(x.side)], "][", y.side[1], "-", y.side[length(y.side)], "]", sep="")
   }
   box.coord.variations <- paste(sort(rep(x.side, length(y.side))), rep(y.side, length(x.side)), sep="")  # this code describes the 8th orientation of the box
-  box.coord.variations <- mirror.mirror(box.coord.variations, starting.orientation = 8)
+  box.coord.variations <- mirror_mirror(box.coord.variations, starting.orientation = 8)
   if(n.loops == 16){
     box.search.token <- c(box.search.token, box.search.token)
     box.coord.variations <- rbind(box.coord.variations, box.coord.variations)
@@ -304,7 +304,7 @@ nemo.finder <- function(pattern=NA, data, box=c("as", "sa"), exclude.handi = T, 
   plot.colors <- original.colors
   first.move.colors <- rep(pattern[[2]][1], 8)
   n.pattern.moves <- length(original.moves)
-  raw.coord.variations <- mirror.mirror(original.moves, starting.orientation = original.orientation)
+  raw.coord.variations <- mirror_mirror(original.moves, starting.orientation = original.orientation)
   search.pattern.variations <- raw.coord.variations
   color.tags <- ifelse(original.colors=="black", "B\\[", "W\\[")
   search.pattern.variations <- t(apply(search.pattern.variations, 1, function(z) paste(color.tags, z, "\\]", sep="")))
@@ -609,7 +609,7 @@ orienter <- function(pattern){
   orientation
 }
 
-mirror.mirror <- function(pattern, starting.orientation=NA){
+mirror_mirror <- function(pattern, starting.orientation=NA){
   if(is.na(starting.orientation)) starting.orientation <- orienter(pattern)
   if(starting.orientation > 9) starting.orientation <- as.numeric(substr(starting.orientation, 2, 2))
   if(class(pattern)=="list"){
