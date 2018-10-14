@@ -7,8 +7,12 @@ DOI: http://dx.doi.org/10.1016/j.evolhumbehav.2014.04.001
 Requirements:
 - R (3.3.1 or greater) https://cran.r-project.org/
 - rethinking package (v1.59 or greater), http://xcelab.net/rm/software/
-- glmer2stan (v0.995), http://xcelab.net/rm/software/
+- rstan
+- tictoc (for timing analysis steps)
+- knitr (for final manuscript creation)
+- RColorBrewer (for figures)
 - LaTeX, https://www.latex-project.org/
+
 
 Instructions:
 
@@ -40,10 +44,8 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 
 ## TODO
 
+- add calculated values in the rmd
 - add more docstrings
+- update readme with new dependencies
 - clean up bibtex keys
-- confirm the `valid_range` object is really doing its job right
-- clean out project_support
-- remove the need for mirror_mirror
-- remove all moves except `fourfour`
 - rewrite code using data frames!

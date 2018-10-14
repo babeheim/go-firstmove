@@ -102,7 +102,7 @@ white_won <- as.numeric(substr(gogod[, "RE"], 1, 1) == "W")
 ## what about ties? ignore them, I guess no one won!
 komi <- as.numeric(gogod[, "KM"])
 komi <- komi - modal(komi)
-
+# only time `modal` is called, remove??
 
 # ok, let"s get those first moves
 
