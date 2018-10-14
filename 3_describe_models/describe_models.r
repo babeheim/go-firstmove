@@ -163,7 +163,7 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as_numeric(beta_post$Intercept + beta_post$pop_44 * x +
+  est <- as.numeric(beta_post$Intercept + beta_post$pop_44 * x +
     beta_post$b_44 * per_use + beta_post$pop_win_44 * perf +
     beta_post$pop_44xpop_win_44 * x * perf)
   my_mean[i] <- logistic(mean(est))
@@ -184,7 +184,7 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as_numeric(beta_post$Intercept + beta_post$pop_44 * x +
+  est <- as.numeric(beta_post$Intercept + beta_post$pop_44 * x +
     beta_post$b_44 * per_use + beta_post$pop_win_44 * perf +
     beta_post$pop_44xpop_win_44 * x * perf)
   my_mean[i] <- logistic(mean(est))
@@ -203,7 +203,7 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as_numeric(beta_post$Intercept + beta_post$pop_44 * x +
+  est <- as.numeric(beta_post$Intercept + beta_post$pop_44 * x +
     beta_post$b_44 * per_use + beta_post$pop_win_44 * perf +
     beta_post$pop_44xpop_win_44 * x * perf)
   my_mean[i] <- logistic(mean(est))
@@ -216,7 +216,7 @@ polygon(c(xs, rev(xs)), c(ub, rev(lb)), border = NA,
 
 text(-0.05, 0.74, " + 10% perf.", col = my_col)
 
-d$fourfour <- as_numeric(d$fourfour)
+d$fourfour <- as.numeric(d$fourfour)
 
 these <- sample(1:nrow(d), 2000)
 points(d$pop_44[these], jitter(d$fourfour[these], factor = 0.5),
@@ -253,7 +253,7 @@ for (i in 1:n_pl) {
 }
 points(1:n_pl, my_means, pch = 20)
 abline(h = logistic(mean(p$Intercept)), col = "gray", lty = 2)
-abline(h = logistic(HPDI(as_numeric(p$Intercept))), col = "gray")
+abline(h = logistic(HPDI(as.numeric(p$Intercept))), col = "gray")
 
 PBxb_44 <- apply(PBxb_44, 2, function(z) z + p$beta_b_44)
 my_b_means <- apply(PBxb_44, 2, mean)
@@ -268,7 +268,7 @@ for (i in 1:n_pl) {
   lines(c(i, i), c(my_b_HPDI[1, i], my_b_HPDI[2, i]), col = my_col[i])
 }
 abline(h = (mean(p$beta_b_44)), col = "gray", lty = 2)
-abline(h = (HPDI(as_numeric(p$beta_b_44))), col = "gray")
+abline(h = (HPDI(as.numeric(p$beta_b_44))), col = "gray")
 points(1:n_pl, my_b_means, pch = 20)
 abline(h = 0)
 
@@ -285,7 +285,7 @@ for (i in 1:n_pl) {
   lines(c(i, i), c(my_pop_HPDI[1, i], my_pop_HPDI[2, i]), col = my_col[i])
 }
 abline(h = (mean(p$beta_pop_44)), col = "gray", lty = 2)
-abline(h = (HPDI(as_numeric(p$beta_pop_44))), col = "gray")
+abline(h = (HPDI(as.numeric(p$beta_pop_44))), col = "gray")
 points(1:n_pl, my_pop_means, pch = 20)
 abline(h = 0)
 
@@ -329,7 +329,7 @@ par(family = "Times")
 
 my_cols <- brewer.pal(6, "Spectral")
 
-set_seed(1000)
+set.seed(1000)
 thin <- sample(1:3000, 1000)
 
 plot(c(-4, 10), c(-10, 16), col = "white", pch = 20,
@@ -342,7 +342,7 @@ target_name_list <- character(0)
 target <- "Peng Quan"
 target_col <- my_cols[1]
 target_id <- unique(d$PB_id[d$PB == target])
-i <- as_numeric(target_id)
+i <- as.numeric(target_id)
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
 points(p$vary_PB_id[thin, i, 2] + mean(p$beta_b_44[thin]),
@@ -435,7 +435,7 @@ abline(h = mean(p$beta_pop_44), lty = 2, col = "black")
 dev.off()
 
 dir_init("./output")
-files <- list.files("./temp", full_names = TRUE)
+files <- list.files("./temp", full.names = TRUE)
 file.copy(files, "./output")
 
 if (!save_temp) unlink("./temp", recursive = TRUE)

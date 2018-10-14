@@ -18,8 +18,7 @@ file.remove("./manuscript.md")
 # Stage 2: markdown to tex
 
 dir_init("./tex")
-system("pandoc ./markdown/manuscript.md --latex-engine=xelatex
-  --template=./assets/go-template.tex -o ./tex/manuscript.tex")
+system("pandoc ./markdown/manuscript.md --latex-engine=xelatex --template=./assets/go-template.tex -o ./tex/manuscript.tex")
 
 # Stage 3: compile tex into a pdf and docx
 
