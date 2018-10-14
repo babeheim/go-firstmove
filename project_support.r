@@ -6,7 +6,9 @@ library(tictoc)
 library(knitr)
 
 scaffold <- FALSE
-save_temp <- FALSE
+save_temp <- TRUE
+save_output <- TRUE
+n_iter <- 2000
 
 texttab <- function(input.matrix, alignment = NA,
   hlines = NA, caption = "", scale = NA) {
@@ -21,19 +23,6 @@ texttab <- function(input.matrix, alignment = NA,
     }
   }
   return(output)
-}
-
-modal <- function(data) {
-  mode <- NA
-  if (length(data) > 0 & !all(is.na(data))) {
-    mode <- names(sort(table(data), decreasing = TRUE))[1]
-    options(warn = (-1))
-    if (!is.na(as.numeric(mode))) {
-      mode <- as.numeric(mode)
-    }
-    options(warn = 0)
-  }
-  return(mode)
 }
 
 dir_init <- function(path, verbose = FALSE, overwrite = TRUE) {

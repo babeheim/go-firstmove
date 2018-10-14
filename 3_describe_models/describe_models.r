@@ -6,15 +6,13 @@ if (scaffold) {
 
 dir_init("./temp")
 
-start.time <- Sys.time()
+print("load fitted models")
 
 load("./inputs/horizon24.robj")
-
-d <- read.csv("./inputs/fourfour_final.csv", as.is = TRUE)
-
-## model analysis
-
+d <- read.csv("./inputs/fourfour_final.csv", stringsAsFactors = FALSE)
 p <- extract(horizon24)
+
+print("extract posterior estimates and create Table 1")
 
 beta_post <- as.data.frame(p[1:10])
 colnames(beta_post) <- c("Intercept", "b_44", "b_44xb_win_44",
@@ -73,6 +71,8 @@ tab1 <- rbind(tab1, c("Age$_k$ $\\times$ Population Fourfour Use Rate",
 output <- texttab(tab1, hlines = c(1, 11, 12, 17))
 
 writeLines(output, "./temp/table1.txt")
+
+print("create Table 2, nationality scores")
 
 # players averaged by nationality...
 
@@ -133,7 +133,7 @@ output <- texttab(tab2, alignment = "{lrrrrr}", hlines = c(1, 5))
 
 writeLines(output, "./temp/table2.txt")
 
-
+print("create figures")
 
 pdf("./temp/FigPr44xPop_COL.pdf", width = 3.5, height = 3.5)
 
@@ -434,8 +434,10 @@ abline(h = mean(p$beta_pop_44), lty = 2, col = "black")
 
 dev.off()
 
-dir_init("./output")
-files <- list.files("./temp", full.names = TRUE)
-file.copy(files, "./output")
+if (save_output) {
+  dir_init("./output")
+  files <- list.files("./temp", full.names = TRUE)
+  file.copy(files, "./output")
+}
 
 if (!save_temp) unlink("./temp", recursive = TRUE)

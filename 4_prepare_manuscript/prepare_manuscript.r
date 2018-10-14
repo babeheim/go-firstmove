@@ -35,8 +35,10 @@ system("xelatex manuscript")
 
 setwd("..")
 
-dir_init("./output", overwrite = FALSE)
-file.copy("./temp/manuscript.pdf", "./output", overwrite = TRUE)
+if (save_output) {
+  dir_init("./output", overwrite = FALSE)
+  file.copy("./temp/manuscript.pdf", "./output", overwrite = TRUE)
+}
 
 if (!save_temp) {
   unlink("./markdown", recursive = TRUE)
