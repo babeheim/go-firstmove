@@ -38,6 +38,8 @@ d <- d[-drop, ] # 49999 games remaining
 drop <- sort(unique(c(grep("ama|Ama", d$BR), grep("ama|Ama", d$WR)))) # 1629 games to drop
 d <- d[-drop, ] # 48370 games remaining
 
+write.csv(d, "./fourfour_intermediate.csv", stringsAsFactors = FALSE)
+
 # drop all games by black players who have less than 50 games to their names
 black_game_counts <- sort(table(d$PB), decreasing = TRUE)
 black_game_counts <- black_game_counts[black_game_counts > 49]

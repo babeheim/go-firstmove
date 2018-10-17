@@ -44,5 +44,8 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 
 # To-Dos
 
+- code to generate figures 1 and 2
+- unit tests on numbers
+- diagnositics on model fits
 - add calculated values in the rmd
 - clean up bibtex keys
