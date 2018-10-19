@@ -9,6 +9,16 @@ tic.clearlog()
 
 ##############
 
+tic("explore data")
+dir_init("./0_explore_data/inputs")
+file.copy("./data/gogod_gamedata_c.csv", "./0_explore_data/inputs")
+setwd("./0_explore_data")
+source("./explore_data.r")
+setwd("..")
+toc(log = TRUE)
+
+##############
+
 tic("build regression dataframe")
 dir_init("./1_build_dataframe/inputs")
 file.copy("./data/gogod_gamedata_c.csv", "./1_build_dataframe/inputs")
