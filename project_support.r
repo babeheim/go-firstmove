@@ -5,8 +5,8 @@ library(RColorBrewer) # needed for figures
 library(tictoc)
 library(knitr)
 
-scaffold <- TRUE
-save_temp <- TRUE
+scaffold <- FALSE
+save_temp <- FALSE
 save_output <- TRUE
 n_iter <- 2000
 
