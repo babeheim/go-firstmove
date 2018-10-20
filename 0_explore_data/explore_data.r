@@ -83,21 +83,6 @@ games <- games[-drop, ]
 
 d <- data.frame(year)
 
-col_alpha <- function (acol, alpha = 0.2) {
-  acol <- col2rgb(acol)
-  acol.red <- acol["red", ] / 255
-  acol.green <- acol["green", ] / 255
-  acol.blue <- acol["blue", ] / 255
-  acol <- mapply(
-    function(red, green, blue, alphas) {
-      rgb(red, green, blue, alphas)
-    },
-    acol.red, acol.green, acol.blue, alpha
-  )
-  return(as.character(acol))
-}
-
-
 d$fourfour_frq <- tapply(games$fourfour, games$year,
   mean)[as.character(d$year)]
 d$threefour_frq <- tapply(games$threefour, games$year,
