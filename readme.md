@@ -22,7 +22,7 @@ In R, set the working directory to that containing this readme file. For example
   setwd('~/Desktop/go-firstmove')
 ```
 
-if the folder containing the project is named 'go-firstmove' and on your Desktop. You can tell if you are in the right place by typing in `dir()` and seeing the folders 'code' and 'inputs' and this readme.txt file. The analysis takes as input two files:
+if the folder containing the project is named 'go-firstmove' and on your Desktop. You can tell if you are in the right place by typing in `dir()` and seeing this readme.txt file. The analysis takes as input two files:
 
 - 'gogod_gamedata_c.csv' - game information for the professional Go games used in this analysis
 
