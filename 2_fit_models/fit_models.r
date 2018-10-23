@@ -34,11 +34,11 @@ dat_list <- list(
 horizon24 <- stan(file = "./stan/horizon24.stan", data = dat_list,
   iter = n_iter, chains = 3, cores = 3)
 
-save(horizon24, file = "./temp/horizon24.robj")
+save(horizon24, file = "./temp/horizon24.RData")
 
 if (save_output) {
   dir_init("./output")
-  file.copy("./temp/horizon24.robj", "./output")
+  file.copy("./temp/horizon24.RData", "./output")
 }
 
 if (!save_temp) unlink("./temp", recursive = TRUE)

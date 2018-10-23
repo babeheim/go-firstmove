@@ -8,7 +8,7 @@ dir_init("./temp")
 
 print("load fitted models")
 
-load("./inputs/horizon24.robj")
+load("./inputs/horizon24.RData")
 d <- read.csv("./inputs/fourfour_final.csv", stringsAsFactors = FALSE)
 p <- extract(horizon24)
 
