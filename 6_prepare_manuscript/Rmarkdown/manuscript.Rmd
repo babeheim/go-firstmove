@@ -8,6 +8,13 @@ address: $^1$Department of Anthropology, University of New Mexico. $^2$Institute
 abstract: "Human culture is widely believed to undergo evolution, via mechanisms rooted in the nature of human cognition. A number of theories predict the kinds of human learning strategies, as well as the population dynamics that result from their action. There is little work, however, that quantitatively examines the evidence for these strategies and resulting cultural evolution within human populations. One of the obstacles is the lack of individual-level data with which to link transmission events to larger cultural dynamics. Here, we address this problem with a rich quantitative database from the East Asian board game known as Go. We draw from a large archive of Go games spanning the last six decades of professional play, and find evidence that the evolutionary dynamics of particular cultural variants are driven by a mix of individual and social learning processes. Particular players vary dramatically in their sensitivity to population knowledge, which also varies by age and nationality. The dynamic patterns of opening Go moves are consistent with an ancient, ongoing arms race within the game itself."
 ---
 
+```{r, echo = FALSE}
+
+load("./inputs/data_result_list.RData")
+load("./inputs/model_result_list.RData")
+
+```
+
 # Introduction
 
 One of the greatest contributions of evolutionary theory is the ability to answer "why" questions about living things, explaining the existence of their intricate and beautiful designs as adaptations via natural selection. This success extends to study of our own species; we now know a great deal about our behavior, psychology and, more indirectly, our ancestry, as a consequence of evolutionary theory \citep{barkow1992adaptedmind, laland2002sense}. Many pathological or idiosyncratic human social phenomena, for example, can be understood as a mismatch between the environment our minds and bodies are "expecting" (subsistence foraging and horticulture) and the one many of us live in (industrial food markets and sedentary lifestyles).
@@ -22,17 +29,17 @@ Though these learning models have been supported by laboratory and field experim
 
 <!-- n -->
 
-In what follows, we present an analysis of such a high-resolution ($n=31,137$) archive of cultural patterns: records from the East Asian game of Go. Over many decades of professional play, we can see particular strategies and counterstrategies be innovated, copied, decline, and vanish altogether. Our results provide strong evidence that, on the average, these trends are the result of strategic social learning decisions by professional Go players as they adopt and abandon variant openings. This learning model, in aggregate, is the basis for an apparent evolutionary arms race that is largely responsible for the oscillations in Go openings among professional players. In this way, we are able to link individual-level strategic learning to aggregate population dynamics.
+In what follows, we present an analysis of such a high-resolution ($n=$ `r dres$n_games`) archive of cultural patterns: records from the East Asian game of Go. Over many decades of professional play, we can see particular strategies and counterstrategies be innovated, copied, decline, and vanish altogether. Our results provide strong evidence that, on the average, these trends are the result of strategic social learning decisions by professional Go players as they adopt and abandon variant openings. This learning model, in aggregate, is the basis for an apparent evolutionary arms race that is largely responsible for the oscillations in Go openings among professional players. In this way, we are able to link individual-level strategic learning to aggregate population dynamics.
 
 # Historical Dynamics in the Game of Go
 
-The East Asian board game known in the West as Go is, by players, one of the most popular in the world, and certainly one of the oldest living games. Originating in China between two and three thousand years ago (where it is called \textit{weiqi}), it has since diffused to Korea (there the game is called \textit{baduk}) and Japan (\textit{go} or \textit{igo}). Through the Japanese, it became widely known in the West in the early 20th century, and most American and European Go terminology is derived from Japanese. With many centuries of paid professional leagues and an abundance of game records (see Fig. 1), Go is an ideal "model system" for the quantitative study of human behavioral change \citep{gobet2004moves}.
+The East Asian board game known in the West as Go is, by players, one of the most popular in the world, and certainly one of the oldest living games. Originating in China between two and three thousand years ago (where it is called \textit{weiqi}), it has since diffused to Korea (there the game is called \textit{baduk}) and Japan (\textit{go} or \textit{igo}). Through the Japanese, it became widely known in the West in the early 20th century, and most American and European Go terminology is derived from Japanese. With many centuries of paid professional leagues and an abundance of game records (see Fig. \ref{fig:kifu}), Go is an ideal "model system" for the quantitative study of human behavioral change \citep{gobet2004moves}.
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=1.3]{./figKifu.pdf}
-    \caption{A complete record, with SGF coordinates, for a 1978 game between Japanese professionals Takemiya Masaki and Kudo Norio. Black (Takemiya) begins with a Fourfour at coordinate \textit{pd} (top right), with White (Kudo) responding at \textit{dd} with another Fourfour. White won by resignation after 232 moves. This game is one of the first successful uses of the \textit{dd} response to the Move 1 Fourfour, and \textit{dd} has subsequently become the dominant response among professionals (see Fig. 3).}
-    \label{FigKifu}
+    \includegraphics[scale=1.3]{./kifu.pdf}
+    \caption{A complete record, with SGF coordinates, for a 1978 game between Japanese professionals Takemiya Masaki and Kudo Norio. Black (Takemiya) begins with a Fourfour at coordinate \textit{pd} (top right), with White (Kudo) responding at \textit{dd} with another Fourfour. White won by resignation after 232 moves. This game is one of the first successful uses of the \textit{dd} response to the Move 1 Fourfour, and \textit{dd} has subsequently become the dominant response among professionals (see Fig. \ref{fig:m2FreqsWins}).}
+    \label{fig:kifu}
   \end{center}
 \end{figure}
 
@@ -51,9 +58,9 @@ Despite the conservatism of opening play in professional games, novel variations
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=1.2]{./figM1FreqsWins.pdf}
-    \caption{The ebb and flow of the three major first move variants, with proportion of games won. The Fourfour's rise and fall, here broken into four eras, closely tracks with its relative performance (\textit{top}) since 1967 ($r=0.45$). Similarly, the Threethree's brief efflorescence and extinction closely match its relative win rate. Because of its initial dominance, all win rates are expressed relative to the Threefour's, and the dotted gray line indicates the location of the 50\% (break-even) point.}
-    \label{FigM1FreqsWins}
+    \includegraphics[scale=1.2]{./m1FreqsWins.pdf}
+    \caption{The ebb and flow of the three major first move variants, with proportion of games won. The Fourfour's rise and fall, here broken into four eras, closely tracks with its relative performance (\textit{top}) since 1967 ($r=$ `r dres$frq_win_cor_44`). Similarly, the Threethree's brief efflorescence and extinction closely match its relative win rate. Because of its initial dominance, all win rates are expressed relative to the Threefour's, and the dotted gray line indicates the location of the 50\% (break-even) point.}
+    \label{fig:m1FreqsWins}
   \end{center}
 \end{figure}
 
@@ -61,29 +68,37 @@ Despite the conservatism of opening play in professional games, novel variations
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=1.2]{./figM2FreqsWins.pdf}
-    \caption{Frequency and performance for four major M2 responses to the Fourfour. Performance for each is calculated as the win rate subtracting the average win rate of alternatives. As at M1, a variants's frequency closely tracks its relative performance. To compare with Fig. 2, we define four eras (I to IV) corresponding to the Fourfour's rise and fall.}
-    \label{FigM2FreqsWins}
+    \includegraphics[scale=1.2]{./m2FreqsWins.pdf}
+    \caption{Frequency and performance for four major M2 responses to the Fourfour. Performance for each is calculated as the win rate subtracting the average win rate of alternatives. As at M1, a variants's frequency closely tracks its relative performance. To compare with Fig. \ref{fig:m2FreqsWins}, we define four eras (I to IV) corresponding to the Fourfour's rise and fall.}
+    \label{fig:m2FreqsWins}
   \end{center}
 \end{figure}
 
 \clearpage
 
-As shown in Fig. 2, we can see such dynamics of the very first move (Move 1, or M1) over the latter half of 20th century professional play. Once board symmetry is taken into account, there are only two common locations Black will play, the Fourfour and the Threefour, each named after their coordinate locations on the corners of the board.
+As shown in Fig. \ref{fig:m1FreqsWins}, we can see such dynamics of the very first move (Move 1, or M1) over the latter half of 20th century professional play. Once board symmetry is taken into account, there are only two common locations Black will play, the Fourfour and the Threefour, each named after their coordinate locations on the corners of the board.
 
-After a brief enthusiasm for the Threethree in the 1960s, the Fourfour rose to dominance, peaking in 1977 (appearing in 78\% of games played) and again in 1996 (82\% of games played). The primary goal of this analysis is to understand why this pattern exists, and what processes are driving evolution at M1.
+<!-- 1977 had 44 in 78% of games plaed -->
+<!-- 1996 had 44 in 82% of games plaed -->
 
-We can trace the rapid diffusion of the Fourfour during this time back to the success of a single innovator, Japanese professional Takemiya Masaki. Beginning his pro career at the age of 14 in the 1960s, Takemiya has used the Fourfour almost exclusively; of his 520 games as Black in the database, only six do not start with the Fourfour. Takemiya's novel use of this variant in 1968 marks the beginning of its spread within the broader Go community, and his personal performance for the next five years (64\%) also exceeded the average Black win rate (61.5\%).
+After a brief enthusiasm for the Threethree in the 1960s, the Fourfour rose to dominance, peaking in 1977 (appearing in 78% of games played) and again in 1996 (82% of games played). The primary goal of this analysis is to understand why this pattern exists, and what processes are driving evolution at M1.
 
-<!-- takemiya's win rate -->
+We can trace the rapid diffusion of the Fourfour during this time back to the success of a single innovator, Japanese professional Takemiya Masaki. Beginning his pro career at the age of 14 in the 1960s, Takemiya has used the Fourfour almost exclusively; of his 520 games as Black in the database, only six do not start with the Fourfour. Takemiya's novel use of this variant in 1968 marks the beginning of its spread within the broader Go community, and his personal performance for the next five years (64%) also exceeded the average Black win rate (61.5%).
 
-Subsequent to Takemiya's arrival, the success of the Fourfour appears to have prompted an innovation race in White's Move 2 response. Before 1970, White's response to the Fourfour was almost always a Threefour on an adjacent corner. If we imagine the M1 Fourfour is played in the upper right quadrant (SGF coordinate *pd*), nearly 80\% of the time the M2 response in the late 1960s was coordinate *dc* (Fig. 3). By 1977, at the Fourfour's first peak, the *dc* response declined to about 30\% of games. In the interim, M2 variants at *dp*, *cq* and *dd* all became established in rapid sequence. As measured by the proportion of games White won, *dp* and *cq* both consistently outperformed *dc* in the 1970s, blunting the Fourfour's effectiveness and anticipating its decline in use after 1977.
+<!-- takemiya has 520 games in the data -->
+<!-- takemiya's win rate of 64% vs avg black of 61.5% -->
+
+<!-- before 1970 whites response almost always a threefour on adjacent corner -->
+<!-- by 1977 dc response was about 30% of games -->
+<!-- db and cq consistently outperfomed dc in the 1970s -->
+
+Subsequent to Takemiya's arrival, the success of the Fourfour appears to have prompted an innovation race in White's Move 2 response. Before 1970, White's response to the Fourfour was almost always a Threefour on an adjacent corner. If we imagine the M1 Fourfour is played in the upper right quadrant (SGF coordinate *pd*), nearly 80% of the time the M2 response in the late 1960s was coordinate *dc* (Fig. \ref{fig:m2FreqsWins}). By 1977, at the Fourfour's first peak, the *dc* response declined to about 30% of games. In the interim, M2 variants at *dp*, *cq* and *dd* all became established in rapid sequence. As measured by the proportion of games White won, *dp* and *cq* both consistently outperformed *dc* in the 1970s, blunting the Fourfour's effectiveness and anticipating its decline in use after 1977.
 
 ## Strategic Social Learning
 
 From the above, it appears that the waxing and waning success of the Fourfour stems from an ongoing crucible of innovation and counter-innovation. As it rapidly proliferated in the professional community in the 1970s, the Fourfour enjoyed an anomalously large win rate. Conversely, the Fourfour's decline after 1977 occurred when its win rate was consistently below that of its rival variant, the M1 Threefour.
 
-With so many possible opening moves, the few that are observed over the decades of play suggest an important role for cultural transmission from player to player through the generations. But is social learning responsible for the oscillations in move frequencies observed in Figs. 2 \& 3?
+With so many possible opening moves, the few that are observed over the decades of play suggest an important role for cultural transmission from player to player through the generations. But is social learning responsible for the oscillations in move frequencies observed in Figs. \ref{fig:m1FreqsWins} \& \ref{fig:m2FreqsWins}?
 
 As strategic actors in a high-stakes competitive environment, professional Go players are under immense pressure to choose effective moves that help defeat their opponents. We should expect that players update their valuation of particular sequences through trial and error in their own games, so that past performance predicts current behavior.
 
@@ -93,9 +108,9 @@ Theoretical models and experiments have focused on two important forms of such s
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=1.2]{./FigPr44xPop_COL.pdf}
-    \caption{Predicted probability of using the Fourfour by an average player at different values of population use, with means (dotted lines) and 95\% HPDI (solid regions). Per Table 1, the relative win rate of the Fourfour within the population regulates the effect of population use, -10\% versus the Threefour (orange), equal to the Threefour (light blue) and +10\% (dark blue). Outcome data is also shown via scatterplot.}
-    \label{FigPr44}
+    \includegraphics[scale=1.2]{./pr44xPop.pdf}
+    \caption{Predicted probability of using the Fourfour by an average player at different values of population use, with means (dotted lines) and 95\% HPDI (solid regions). Per Table \ref{table:pr44_logistic_coefs}, the relative win rate of the Fourfour within the population regulates the effect of population use, -10\% versus the Threefour (orange), equal to the Threefour (light blue) and +10\% (dark blue). Outcome data is also shown via scatterplot.}
+    \label{fig:pr44}
   \end{center}
 \end{figure}
 
@@ -112,18 +127,19 @@ Predictor variables for each game used a retrospective two-year window from the 
 \begin{table}[t]
   \centering
     \begin{tabular}{lrr}
-    \input{"./table1.txt"}
-    \end{tabular}%
+    \input{"./pr44_logistic_coefs.txt"}
+    \end{tabular}
   \caption{Logistic regression estimates for Pr(Use Fourfour in game $i$)}
+  \label{table:pr44_logistic_coefs}
 \end{table}
 
 # Results
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=0.8]{./FigPlayerAgeBetaGamma_COL.pdf}
+    \includegraphics[scale=0.8]{./playerAgeBetaGamma.pdf}
     \caption{(\textit{left}) Six player-specific joint posterior densities of the importance of individual ($\beta_j$) and social ($\gamma_j$) information on predicting move outcome, along with the main effect density (black region). Players who lie above the line of equality (solid gray) are more predicted by recent population trends than individual experience, while the reverse is true for players below it. (\textit{right}) Estimates for the importance of social knowledge for each year of age $k$, showing means and 95\% HPDI intervals. Younger players tend to have values of $\gamma_k$ above the main effect mean $\gamma$ (dotted), but this declines as they age.}
-  \label{FigPlayerAgeBetaGamma}
+  \label{fig:playerAgeBetaGamma}
   \end{center}
 \end{figure}
 
@@ -132,22 +148,23 @@ Predictor variables for each game used a retrospective two-year window from the 
 <!-- recent win rate predicts current use, OR of 2.77 -->
 <!-- recent personal use and win rate interaction effect exists -->
 
-With all predictors centered on means, the intercept estimates that an average Go player will use the Fourfour about 53.2\% of the time during the study period (i.e. logit(.532)=0.13). A player's recent use of a particular opening move strongly predicts their future use; for an otherwise-average player who used the Fourfour about 60\% of their recent games, the probability they will use the Fourfour rises to 58.7\% (OR: 9.39). There is a smaller (OR: 2.77), but unambiguous, positive performance effect from past success with the Fourfour, adding about two percentage points to the probability of use for a player who has won 10\% more games using the Fourfour than his overall win rate. These two personal effects also interact, so that past success enhances the predictive power of past use (or vis versa).
+With all predictors centered on means, the intercept estimates that an average Go player will use the Fourfour about `r mres$pr_44_baseline`% of the time during the study period (i.e. logit(.524)=0.10). A player's recent use of a particular opening move strongly predicts their future use; for an otherwise-average player who used the Fourfour about 60% of their recent games, the probability they will use the Fourfour rises to `r mres$pr_44_b_use_60`% (OR: `r mres$or_44_b_use`). There is a smaller (OR: 2.77), but unambiguous, positive performance effect from past success with the Fourfour, adding about two percentage points to the probability of use for a player who has won 10% more games using the Fourfour than his overall win rate. These two personal effects also interact, so that past success enhances the predictive power of past use (or vis versa).
 
 <!-- recent pop use of 60% means expected prob is 59%, OR 10.475 -->
 <!-- recent pop use of 60% and +10% performance, its 61.4% -->
 
-Most important to the question of social learning and cultural evolution, though, is whether there is predictive value in the recent behavior of *other* players, controlling for individual behavior. Indeed, when the Fourfour appears in 60\% of *all* recent games, the expected probability of use by an average player rises from 53.2\% to 59.0\% (OR: 10.475). Two important interaction effects regulate the frequency-dependence of a player's behavior; if the Fourfour appears in 60\% of recent professional games, *and* its population performance is ten percentage points higher than that of its rival, the Threefour, the expected probability a player will use it rises from 59.0\% to 61.4\% (Fig. 4).
+Most important to the question of social learning and cultural evolution, though, is whether there is predictive value in the recent behavior of *other* players, controlling for individual behavior. Indeed, when the Fourfour appears in 60% of *all* recent games, the expected probability of use by an average player rises from `r mres$pr_44_baseline`% to `r mres$pr_44_pop_use_60`% (OR: `r mres$or_44_pop_use`). Two important interaction effects regulate the frequency-dependence of a player's behavior; if the Fourfour appears in 60% of recent professional games, *and* its population performance is ten percentage points higher than that of its rival, the Threefour, the expected probability a player will use it rises from `r mres$pr_44_pop_use_60`% to `r mres$pr_44_pop_use_60_win_10`% (Fig. \ref{fig:pr44}).
 
 <!-- social knowledge is 1.05x more important -->
 <!-- varying effect sigma of 4.00 for player intecepts -->
 <!-- varying effect sigma of 9.77 for player slopes on pop knowledge -->
 
-Because the coefficient for personal use (which we call $\beta$) and that for population use ($\gamma$) have the same units, comparing their magnitudes tells us the relative predictive value of personal and population knowledge. For an average player, social knowledge is 1.05 times more important than personal experience in predicting the outcome, but this belies the enormous variation from player to player. Partially pooling games of each Black player, we see a varying effects standard deviation of 4.00 for the distribution of player-specific $\beta_j$. For population knowledge, the standard deviation across player intercepts is even larger, 9.77. Plotting the joint posterior densities of $\beta_j$ and $\gamma_j$ for each player $j$ (Fig. 5, left) reveals that some professionals are substantially better predicted by social knowledge than by their own experiences, while other players are almost completely insensitive to population trends (foremost among them, Takemiya Masaki).
+Because the coefficient for personal use (which we call $\beta$) and that for population use ($\gamma$) have the same units, comparing their magnitudes tells us the relative predictive value of personal and population knowledge. For an average player, social knowledge is `r mres$social_indy_ratio` times more important than personal experience in predicting the outcome, but this belies the enormous variation from player to player. Partially pooling games of each Black player, we see a varying effects standard deviation of `r mres$player_indy_varef` for the distribution of player-specific $\beta_j$. For population knowledge, the standard deviation across player intercepts is even larger, `r mres$player_social_varef`. Plotting the joint posterior densities of $\beta_j$ and $\gamma_j$ for each player $j$ (Fig. \ref{fig:playerAgeBetaGamma}, left) reveals that some professionals are substantially better predicted by social knowledge than by their own experiences, while other players are almost completely insensitive to population trends (foremost among them, Takemiya Masaki).
 
 <!-- varying effect age trend -->
+<!-- average beta is 2.24 -->
 
-Including player age as a varying effect regulating magnitude of $\beta$ and $\gamma$ also shows learning heterogeneity over the life course (Fig. 5, right). The games of the youngest professionals, those between the ages of 14 and 18, are least predicted by personal experience and most by population trends. After age 20, the balance steadily shifts towards personal experience, peaking at age 27 well above the average $\beta$ of 2.24. Players older than 35 appear to return to average levels of social learning; with a few deviations, no trend is apparent after this age.
+Including player age as a varying effect regulating magnitude of $\beta$ and $\gamma$ also shows learning heterogeneity over the life course (Fig. \ref{fig:playerAgeBetaGamma}, right). The games of the youngest professionals, those between the ages of 14 and 18, are least predicted by personal experience and most by population trends. After age 20, the balance steadily shifts towards personal experience, peaking at age 27 well above the average $\beta$ of 2.24. Players older than 35 appear to return to average levels of social learning; with a few deviations, no trend is apparent after this age.
 
 # Discussion
 
@@ -156,15 +173,17 @@ Though only a preliminary treatment of a very rich dataset, the above results de
 As each player's decision and subsequent game outcome adds new information to the body of population knowledge, this process proceeds recursively, driving the observed cyclic trends in move frequencies. We can also see how the breakaway success of the Fourfour variant at M1 was followed by a period of innovation and diversity in more effective M2 responses, consistent with an ongoing evolutionary arms race conducted through strategic social learning.
 
 <!-- national differences in sensitivities to social and individual info... -->
+<!-- 75 chinese players -->
 
-According to player-specific posterior estimates in Fig. 5, the players who most strongly track population trends are South Korean professionals Lee Sedol and Cho Namchul, while Chinese player Peng Quan and Japanese player Takemiya Masaki lie at the other extreme. This segregation of nationalities may not be a coincidence; as Table 2 shows, the average of the player-specific estimates for individual and population knowledge differs across country, with South Korean players tending toward greater-than-average sensitivity to social information (positive mean $\gamma_j$). The average Japanese player, in contrast, is better predicted by their individual knowledge (positive mean $\beta_j$), with the 75 Chinese players nearest to the population intercepts $\beta$ and $\gamma$, on the average. It is important to emphasize that these distributions show substantial overlap, but this result raises the tantalizing possibility that normative or institutional differences across East Asia may encourage different forms of social learning within each national league.
+According to player-specific posterior estimates in Fig. \ref{fig:playerAgeBetaGamma}, the players who most strongly track population trends are South Korean professionals Lee Sedol and Cho Namchul, while Chinese player Peng Quan and Japanese player Takemiya Masaki lie at the other extreme. This segregation of nationalities may not be a coincidence; as Table \ref{table:national_coef_averages} shows, the average of the player-specific estimates for individual and population knowledge differs across country, with South Korean players tending toward greater-than-average sensitivity to social information (positive mean $\gamma_j$). The average Japanese player, in contrast, is better predicted by their individual knowledge (positive mean $\beta_j$), with the 75 Chinese players nearest to the population intercepts $\beta$ and $\gamma$, on the average. It is important to emphasize that these distributions show substantial overlap, but this result raises the tantalizing possibility that normative or institutional differences across East Asia may encourage different forms of social learning within each national league.
 
 \begin{table}[t]
   \centering
     \begin{tabular}{lrrrrr}
-    \input{"./table2.txt"}
-    \end{tabular}%
+    \input{"./national_coef_averages.txt"}
+    \end{tabular}
     \caption{National averages of player-specific estimates of reliance on individual ($\beta_j$) and social ($\gamma_j$) information.}
+    \label{table:national_coef_averages}
 \end{table}
 
 Although we can do much to reconstruct and explore the historical record, several important questions remain outstanding. First, we do not know the nature of the observed success bias. We can see that relative performance of the Fourfour versus the Threefour consistently improves our predictions of which one a particular player will use. This seems to indicate players focus on how well a move does, but it is equally possible, however, that successful players rather than successful variants are what are emulated.

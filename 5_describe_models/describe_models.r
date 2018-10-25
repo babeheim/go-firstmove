@@ -6,13 +6,60 @@ if (scaffold) {
 
 dir_init("./temp")
 
+######
+
 print("load fitted models")
 
 load("./inputs/horizon24.RData")
 d <- read.csv("./inputs/fourfour_final.csv", stringsAsFactors = FALSE)
 p <- extract(horizon24)
 
-print("extract posterior estimates and create Table 1")
+
+
+print("calculate key numerical results and save to disk")
+
+mres <- list()
+
+# model intercept of 53.2%
+post_logodds <- p$Intercept
+mres$pr_44_baseline <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+
+# recent personal use predicts current use; 60% use outcome is 58.7% (OR 9.39 ????) ceteris paribus
+post_logodds <- p$Intercept + p$beta_b_44 * 0.1
+mres$pr_44_b_use_60 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+mres$or_44_b_use <- sprintf("%.2f", mean(p$beta_b_44))
+
+# recent win rate predicts current use, OR of 2.77
+post_logodds <- p$Intercept + p$beta_b_44 * 0.1
+mres$or_b_win_44 <- sprintf("%.2f", mean(exp(p$beta_b_win_44)))
+
+# recent personal use and win rate interaction effect exists
+
+# recent pop use of 60% means expected prob is 59%, OR 10.475
+post_logodds <- p$Intercept + p$beta_pop_44 * 0.1
+mres$pr_44_pop_use_60 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+mres$or_44_pop_use <- sprintf("%.2f", mean(exp(p$beta_pop_44)))
+
+# recent pop use of 60% and +10% performance, its 61.4%
+# is this right? what *are* the centerings
+post_logodds <- p$Intercept + p$beta_pop_44 * 0.1 + p$beta_pop_win_44 * 0.1 + p$beta_pop_44xpop_win_44 * 0.1 * 0.1
+mres$pr_44_pop_use_60_win_10 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+
+# social knowledge is 1.05x more important
+social_indy_ratio <- p$beta_pop_44 / p$beta_b_44
+mres$social_indy_ratio <- sprintf("%.2f", mean(social_indy_ratio))
+
+# varying effect sigma of 4.00 for player intecepts
+mres$player_indy_varef <- sprintf("%.2f", mean(p$Sigma_PB_id[ , 2, 2]), 2)
+
+# varying effect sigma of 9.77 for player slopes on pop knowledge
+mres$player_social_varef <- sprintf("%.2f", mean(p$Sigma_PB_id[ , 3, 3]), 2)
+
+save(mres, file = "./temp/model_result_list.RData")
+
+
+
+print("extract posterior estimates and create table of model estimates")
 
 beta_post <- as.data.frame(p[1:10])
 colnames(beta_post) <- c("Intercept", "b_44", "b_44xb_win_44",
@@ -70,9 +117,11 @@ tab1 <- rbind(tab1, c("Age$_k$ $\\times$ Population Fourfour Use Rate",
 
 output <- texttab(tab1, hlines = c(1, 11, 12, 17))
 
-writeLines(output, "./temp/table1.txt")
+writeLines(output, "./temp/pr44_logistic_coefs.txt")
 
-print("create Table 2, nationality scores")
+
+
+print("create nationality scores")
 
 # players averaged by nationality...
 
@@ -131,11 +180,13 @@ tab2 <- rbind(c("Nationality", "$n$", "$\\beta_j$", "(S.E.)",
 
 output <- texttab(tab2, alignment = "{lrrrrr}", hlines = c(1, 5))
 
-writeLines(output, "./temp/table2.txt")
+writeLines(output, "./temp/national_coef_averages.txt")
 
-print("create figures")
 
-pdf("./temp/FigPr44xPop_COL.pdf", width = 3.5, height = 3.5)
+
+print("create model-derived figures")
+
+pdf("./temp/pr44xPop.pdf", width = 3.5, height = 3.5)
 
 ci_weight <- 0.6
 
@@ -224,104 +275,7 @@ points(d$pop_44[these], jitter(d$fourfour[these], factor = 0.5),
 
 dev.off()
 
-
-
-# effect of player ID
-
-pdf("./temp/FigPlayerInt.pdf", height = 7, width = 7)
-
-my_col <- heat.colors(300)
-
-par(mfrow = c(3, 1))
-par(mar = c(3.1, 4.1, 1.1, 2.1))
-
-Pb_int <- p$vary_PB_id[ , , 1]
-PBxb_44 <- p$vary_PB_id[ , , 2]
-PBxpop_44 <- p$vary_PB_id[ , , 3]
-
-Pb_int <- apply(Pb_int, 2, function(z) z + p$Intercept)
-my_means <-  logistic(apply(Pb_int, 2, mean))
-o <- order(my_means)
-my_means <- my_means[o]
-n_pl <- length(my_means)
-my_HPDI <- logistic(apply(Pb_int, 2, HPDI))
-my_HPDI <- my_HPDI[ , o]
-plot(1:n_pl, my_means, ylim = c(0, 1), xaxt = "n", las = 1,
-  ylab = "Pr(use 44)", xlab = "player", pch = 20, cex = 0.5, frame.plot = FALSE)
-for (i in 1:n_pl) {
-  lines(c(i, i), c(my_HPDI[1, i], my_HPDI[2, i]), col = my_col[i])
-}
-points(1:n_pl, my_means, pch = 20)
-abline(h = logistic(mean(p$Intercept)), col = "gray", lty = 2)
-abline(h = logistic(HPDI(as.numeric(p$Intercept))), col = "gray")
-
-PBxb_44 <- apply(PBxb_44, 2, function(z) z + p$beta_b_44)
-my_b_means <- apply(PBxb_44, 2, mean)
-  o <- order(my_means)
-my_b_means <- my_b_means[o]
-my_b_HPDI <- apply(PBxb_44, 2, HPDI)
-my_b_HPDI <- my_b_HPDI[ , o]
-plot(1:n_pl, my_b_means, ylim = c(min(my_b_HPDI[1, ]),
-  max(my_b_HPDI[2, ])), xaxt = "n", las = 1, ylab = "beta + beta_j",
-  xlab = "player", pch = 20, cex = 0.5, frame.plot = FALSE)
-for (i in 1:n_pl) {
-  lines(c(i, i), c(my_b_HPDI[1, i], my_b_HPDI[2, i]), col = my_col[i])
-}
-abline(h = (mean(p$beta_b_44)), col = "gray", lty = 2)
-abline(h = (HPDI(as.numeric(p$beta_b_44))), col = "gray")
-points(1:n_pl, my_b_means, pch = 20)
-abline(h = 0)
-
-PBxpop_44 <- apply(PBxpop_44, 2, function(z) z + p$beta_pop_44)
-my_pop_means <- apply(PBxpop_44, 2, mean)
-o <- order(my_pop_means)
-my_pop_means <- my_pop_means[o]
-my_pop_HPDI <- apply(PBxpop_44, 2, HPDI)
-my_pop_HPDI <- my_pop_HPDI[ , o]
-plot(1:n_pl, my_pop_means, ylim = c(min(my_pop_HPDI[1, ]),
-  max(my_pop_HPDI[2, ])), xaxt = "n", las = 1, ylab = "gamma + gamma_j",
-  xlab = "player", pch = 20, cex = 0.5, frame.plot = FALSE)
-for (i in 1:n_pl) {
-  lines(c(i, i), c(my_pop_HPDI[1, i], my_pop_HPDI[2, i]), col = my_col[i])
-}
-abline(h = (mean(p$beta_pop_44)), col = "gray", lty = 2)
-abline(h = (HPDI(as.numeric(p$beta_pop_44))), col = "gray")
-points(1:n_pl, my_pop_means, pch = 20)
-abline(h = 0)
-
-dev.off()
-
-pdf("./temp/FigPlayerAgeBetaGamma_allplayers.pdf", width = 3.75, height = 3.28)
-
-plot(c(-4, 10), c(-10, 16), col = "white", pch = 20,
-  xlab = "reliance on individual information",
-  ylab = "reliance on social information", las = 1)
-
-thin <- sample(1:5000, 1000)
-
-points(p$beta_b_44[thin], p$beta_pop_44[thin], pch = 20,
-  col = col.alpha("black", 0.3))
-
-abline(h = 0, lty = 2, col = col.alpha("black", 0.6))
-abline(v = 0, lty = 2, col = col.alpha("black", 0.6))
-abline(0, 1, lty = 1, col = gray(0.3))
-
-player_beta_effects <- colMeans(p$vary_PB_id[ , , 2]) + mean(p$beta_b_44)
-player_gamma_effects <- colMeans(p$vary_PB_id[ , , 3]) + mean(p$beta_pop_44)
-points(player_beta_effects, player_gamma_effects)
-
-targets <- c("Peng Quan", "Kato Atsushi", "Takemiya Masaki",
-  "Hashimoto Shoji", "Yi Seong-chae", "Cho Hun-hyeon")
-target_ids <- unique(d$PB_id[d$PB %in% targets])
-
-points(player_beta_effects[target_ids], player_gamma_effects[target_ids],
-  pch = 20, col = "red")
-
-dev.off()
-
-
-
-pdf("./temp/FigPlayerAgeBetaGamma_COL.pdf", width = 7.5, height = 3.28)
+pdf("./temp/playerAgeBetaGamma.pdf", width = 7.5, height = 3.28)
 
 par(mfrow = c(1, 2))
 par(mar = c(5.1, 4.1, 0, 2.1))
@@ -433,6 +387,8 @@ for (i in 1:n_ages) lines(c(i, i), c(my_pop_HPDI[1, i], my_pop_HPDI[2, i]),
 abline(h = mean(p$beta_pop_44), lty = 2, col = "black")
 
 dev.off()
+
+########
 
 if (save_output) {
   dir_init("./output")

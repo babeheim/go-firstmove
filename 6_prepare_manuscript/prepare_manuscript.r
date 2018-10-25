@@ -1,11 +1,12 @@
 
-
-if (scaffold == TRUE) {
+if (scaffold) {
   rm(list = ls())
   source("../project_support.r")
 }
 
-# stage 1: Rmarkdown to markdown
+#######
+
+print("convert Rmarkdown to markdown")
 
 file.copy("./Rmarkdown/manuscript.Rmd", ".", overwrite = TRUE)
 knit("./manuscript.Rmd")
@@ -15,12 +16,16 @@ dir_init("./markdown")
 file.copy("./manuscript.md", "./markdown")
 file.remove("./manuscript.md")
 
-# Stage 2: markdown to tex
+
+
+print("convert markdown to tex")
 
 dir_init("./tex")
 system("pandoc ./markdown/manuscript.md --latex-engine=xelatex --template=./assets/go-template.tex -o ./tex/manuscript.tex")
 
-# Stage 3: compile tex into a pdf and docx
+
+
+print("convert tex to pdf")
 
 dir_init("./temp")
 my_files <- list.files("./inputs", full.names = TRUE)
@@ -34,6 +39,8 @@ system("xelatex manuscript")
 system("xelatex manuscript")
 
 setwd("..")
+
+######
 
 if (save_output) {
   dir_init("./output", overwrite = FALSE)

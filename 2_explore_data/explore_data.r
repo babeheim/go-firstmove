@@ -6,39 +6,12 @@ if (scaffold) {
 
 dir_init("./temp")
 
+#######
+
 print("load game data")
 
-games <- read.csv("./inputs/gogod_gamedata_c.csv", stringsAsFactors = FALSE)
+games <- read.csv("./inputs/gogod_cleaned.csv", stringsAsFactors = FALSE)
 
-print("clean game data")
-
-games$year <- as.numeric(substr(games$DT, 1, 4))
-
-# drop games before 1954
-games$year <- as.numeric(substr(games$DT, 1, 4))
-drop <- which(games$year < 1954) # 8642 games to drop
-games <- games[-drop, ] # 51203 games remaining
-
-# drop handicapped games
-drop <- which(!is.na(games$HA)) # 1154 games to drop
-games <- games[-drop, ]  # 50049 games remaning
-
-# drop games with inappropriate first move formats
-drop <- which(substr(games$move.string, 1, 2) != ";B") # 17 games to drop
-games <- games[-drop, ] # 50038 games remaining
-
-# drop this one bad game; first move is a pass, comments imply invalid
-drop <- which(games$filename == "./temp/1998-04-21a.sgf")
-games <- games[-drop, ]
-
-# drop games with unusual results
-drop <- which(substr(games$RE, 1, 1) %in% c("?", "U")) # 38 games to drop
-games <- games[-drop, ] # 49999 games remaining
-
-# drop games played by ranked amateurs
-drop <- sort(unique(c(grep("ama|Ama", games$BR),
-  grep("ama|Ama", games$WR)))) # 1629 games to drop
-games <- games[-drop, ] # 48370 games remaining
 
 
 print("identify move variants")
@@ -74,6 +47,7 @@ games$second_dc <- first_move == "pd" & second_move == "dc" |
 games$black_won <- substr(games$RE, 1, 1) %in% "B"
 
 
+
 print("calculate annual frequencies")
 
 year <- 1958:2009
@@ -103,7 +77,6 @@ d$threefour_win_frq <- tapply(games$black_won[tar], games$year[tar],
 tar <- which(games$threethree == 1)
 d$threethree_win_frq <- tapply(games$black_won[tar], games$year[tar],
   mean)[as.character(d$year)]
-
 
 tar <- which(games$fourfour == 1)
 d$second_dd_frq <- tapply(games$second_dd[tar], games$year[tar],
@@ -136,6 +109,22 @@ d$second_dc_win_frq <- tapply(1 - games$black_won[tar],
   games$year[tar], mean)[as.character(d$year)]
 
 
+
+print("calculate essential descriptive statistics of dataset")
+
+dres <- list()
+
+frq_win_cor <- cor(d$fourfour_frq[10:52], d$fourfour_win_frq[10:52] - d$threefour_win_frq[10:52])
+dres$frq_win_cor_44 <- sprintf("%.2f", frq_win_cor)
+
+dres$n_games <- nrow(games)
+dres$n_black_players <- length(unique(games$PB_id)) # no no no!
+dres$n_games_takemiya <- sum(d$PB == "Takemiya Masaki")
+
+save(dres, file = "./temp/data_result_list.RData")
+
+
+
 print("plot frequencies of different first moves")
 
 png("./temp/first_move_frqs.png", res = 300,
@@ -166,6 +155,8 @@ axis(2, at = seq(0, 1, by = 0.2), las = 1)
 
 dev.off()
 
+
+
 print("plot win frequencies of different first moves")
 
 png("./temp/first_move_win_frqs.png", res = 300,
@@ -191,6 +182,8 @@ axis(2, at = c(-0.4, -0.2, 0, 0.2), las = 1)
 dev.off()
 
 # the published average line looks wrong...
+
+
 
 print("plot second move frequencies in response to a 44")
 
@@ -227,6 +220,8 @@ axis(2, at = seq(0, 1, by = 0.2), las = 1)
 
 dev.off()
 
+
+
 print("plot win frequencies of responses to a 44")
 
 png("./temp/second_move_win_frqs.png", res = 300,
@@ -254,8 +249,12 @@ axis(2, at = c(-0.4, 0, 0.4), las = 1)
 
 dev.off()
 
-dir_init("./output")
-files <- list.files("./temp", full.names = TRUE)
-file.copy(files, "./output")
+#######
+
+if (save_output) {
+  dir_init("./output")
+  files <- list.files("./temp", full.names = TRUE)
+  file.copy(files, "./output")
+}
 
 if (!save_temp) unlink("./temp", recursive = TRUE)
