@@ -44,6 +44,5 @@ The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at htt
 
 # To-Dos
 
-- unit tests on numbers
 - diagnositics on model fits
-- add calculated values in the rmd
+- add models with different time horizons per supplementary

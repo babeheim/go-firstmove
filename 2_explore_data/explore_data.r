@@ -118,8 +118,7 @@ frq_win_cor <- cor(d$fourfour_frq[10:52], d$fourfour_win_frq[10:52] - d$threefou
 dres$frq_win_cor_44 <- sprintf("%.2f", frq_win_cor)
 
 dres$n_games <- nrow(games)
-dres$n_black_players <- length(unique(games$PB_id)) # no no no!
-dres$n_games_takemiya <- sum(d$PB == "Takemiya Masaki")
+dres$n_games_takemiya <- sum(games$PB == "Takemiya Masaki")
 
 save(dres, file = "./temp/data_result_list.RData")
 
@@ -248,6 +247,8 @@ axis(1, at = 1960 + 10 * 0:5)
 axis(2, at = c(-0.4, 0, 0.4), las = 1)
 
 dev.off()
+
+
 
 #######
 

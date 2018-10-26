@@ -13,8 +13,6 @@ print("load game data")
 
 d <- read.csv("./inputs/gogod_cleaned.csv", stringsAsFactors = FALSE)
 
-
-
 print("exclude players with less than 50 games")
 
 # drop all games by black players who have less than 50 games to their names
@@ -24,29 +22,6 @@ black_players_studied <- names(black_game_counts)
 
 drop <- which(!d$PB %in% black_players_studied) # 13834 games to drop
 d <- d[-drop, ] # 34536 games remaining
-
-
-
-# (i should move this step into 1_clean_data)
-print("prepared predictors based on demographic data")
-
-bio_data <- read.csv("./inputs/PB Biographical Data.csv", stringsAsFactors = FALSE)
-bio_data$Birth.Year <- as.numeric(bio_data$Birth.Year)
-bio_data$Nationality <- gsub(" ", "", bio_data$Nationality)
-
-d$BN <- bio_data$Nationality[match(d$PB, bio_data$Player.Name)]
-
-d$black_birth_year <- bio_data$Birth.Year[match(d$PB, bio_data$Player.Name)]
-d$black_age <- d$year - d$black_birth_year
-
-player_list <- sort(unique(c(d$PB, d$PW)))
-n_players <- length(player_list)
-d$black_won <- as.numeric(substr(d$RE, 1, 1) == "B")
-# note that we are ignoring ties
-d$komi <- as.numeric(d$KM) - 5.5 # re-centering on modal komi amount
-
-first_move <- substr(d$move.string, 4, 5)
-d$fourfour <- as.numeric(first_move %in% c("pd", "dp", "dd", "pp"))
 
 
 
@@ -95,6 +70,7 @@ for (i in 1:n_games) {
 
 
 
+# this is clunky, i should streamline this
 print("reduce table and simplify variable names")
 
 keep <- c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour",

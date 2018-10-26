@@ -123,8 +123,6 @@ writeLines(output, "./temp/pr44_logistic_coefs.txt")
 
 print("create nationality scores")
 
-# players averaged by nationality...
-
 JP_cols <- sort(unique(d$PB_id[d$BN == "Japanese"]))
 CH_cols <- sort(unique(d$PB_id[d$BN == "Chinese"]))
 SK_cols <- sort(unique(d$PB_id[d$BN == "Korean"]))
