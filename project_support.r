@@ -6,6 +6,9 @@ library(tictoc)
 library(knitr)
 library(testthat)
 
+expect_true(capabilities("png"))
+expect_true(capabilities("cairo"))
+
 expect_silent(system("xelatex -v"))
 expect_silent(system("bibtex -v"))
 expect_silent(system("pandoc -v"))
