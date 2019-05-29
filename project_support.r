@@ -4,6 +4,11 @@ library(rstan)
 library(RColorBrewer) # needed for figures
 library(tictoc)
 library(knitr)
+library(testthat)
+
+expect_silent(system("xelatex -v"))
+expect_silent(system("bibtex -v"))
+expect_silent(system("pandoc -v"))
 
 scaffold <- FALSE
 save_temp <- FALSE
