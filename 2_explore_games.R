@@ -10,7 +10,7 @@ print("load game data")
 
 games <- read.csv("games.csv")
 
-stopifnot(nrow(games) == 48133)
+stopifnot(nrow(games) == 46328)
 
 
 

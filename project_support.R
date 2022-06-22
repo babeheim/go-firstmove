@@ -15,10 +15,7 @@ expect_silent(system("xelatex -v"))
 expect_silent(system("bibtex -v"))
 expect_silent(system("pandoc -v"))
 
-scaffold <- FALSE
-save_temp <- FALSE
-save_output <- TRUE
+scaffold <- TRUE
 n_iter <- 2000
 
 source("R/misc_functions.R")
-source("R/sgf_functions.R")

@@ -9,7 +9,7 @@ print("load game data")
 
 d <- read.csv("games.csv")
 
-stopifnot(nrow(d) == 48133)
+stopifnot(nrow(d) == 46328)
 
 print("exclude players with less than 50 games")
 
@@ -18,10 +18,10 @@ black_game_counts <- sort(table(d$PB), decreasing = TRUE)
 black_game_counts <- black_game_counts[black_game_counts > 49]
 black_players_studied <- names(black_game_counts)
 
-stopifnot(length(black_players_studied) == 207) # only 200 with kaya
+stopifnot(length(black_players_studied) == 200)
 
 drop <- which(!d$PB %in% black_players_studied)
-stopifnot(length(drop) == 13732) # only 13301 with kaya
+stopifnot(length(drop) == 13301) # only 13301 with kaya
 d <- d[-drop, ]
 
 
@@ -119,7 +119,7 @@ d$pop_use_x_pop_use_win <- d$pop_use * d$pop_use_win
 d$pop_use_x_ind_win <- d$pop_use * d$ind_win
 d$ind_use_x_ind_win <- d$ind_use * d$ind_win
 
-stopifnot(nrow(d) == 31133)
+stopifnot(nrow(d) == 30006)
 
 stopifnot(!any(is.na(d)))
 
