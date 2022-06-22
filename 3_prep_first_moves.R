@@ -9,7 +9,7 @@ print("load game data")
 
 d <- read.csv("games.csv")
 
-stopifnot(nrow(d) == 46328)
+stopifnot(nrow(d) == 48082)
 
 print("exclude players with less than 50 games")
 
@@ -18,10 +18,10 @@ black_game_counts <- sort(table(d$PB), decreasing = TRUE)
 black_game_counts <- black_game_counts[black_game_counts > 49]
 black_players_studied <- names(black_game_counts)
 
-stopifnot(length(black_players_studied) == 200)
+stopifnot(length(black_players_studied) == 204)
 
 drop <- which(!d$PB %in% black_players_studied)
-stopifnot(length(drop) == 13301) # only 13301 with kaya
+stopifnot(length(drop) == 14657)
 d <- d[-drop, ]
 
 
@@ -47,59 +47,50 @@ for (i in 1:n_games) {
   d$first_row[i] <- date_pointer
 }
 
-d$b_use_cfrq_1p <- NA
-d$ind_win_cfrq_1p <- NA
-d$b_use_win_cfrq_1p <- NA
-d$use_cfrq_1p <- NA
-d$use_win_cfrq_1p <- NA
-d$pop_win_cfrq_1p <- NA
+d$ind_use <- NA
+d$ind_win <- NA
+d$ind_use_win <- NA
+d$pop_use <- NA
+d$pop_use_win <- NA
+d$pop_win <- NA
 
 for (i in 1:n_games) {
   valid_range <- game_index %in% d$first_row[i]:(i - 1)
 
-  d$use_cfrq_1p[i] <- mean(d$fourfour[valid_range]) - 0.5
-  d$use_win_cfrq_1p[i] <- mean(d$black_won[valid_range & d$fourfour]) -
+  d$pop_use[i] <- mean(d$fourfour[valid_range]) - 0.5
+  d$pop_use_win[i] <- mean(d$black_won[valid_range & d$fourfour]) -
     mean(d$black_won[valid_range & !d$fourfour])
-  d$pop_win_cfrq_1p[i] <- mean(d$black_won[valid_range])
+  d$pop_win[i] <- mean(d$black_won[valid_range])
   
   focal_player <- d$PB[i]
   focal_as_black <- d$PB == focal_player
   focal_as_white <- d$PW == focal_player
   
-  d$b_use_cfrq_1p[i] <- mean(d$fourfour[focal_as_black & valid_range]) - 0.5
-  d$ind_win_cfrq_1p[i] <- mean(d$black_won[focal_as_black & valid_range]) -
+  d$ind_use[i] <- mean(d$fourfour[focal_as_black & valid_range]) - 0.5
+  d$ind_win[i] <- mean(d$black_won[focal_as_black & valid_range]) -
     mean(d$black_won[valid_range])
-  d$b_use_win_cfrq_1p[i] <- mean(d$black_won[focal_as_black & d$fourfour &
+  d$ind_use_win[i] <- mean(d$black_won[focal_as_black & d$fourfour &
     valid_range]) - mean(d$black_won[focal_as_black & valid_range])
   # note that personal 44 win rate is relative to personal average
+  if (i %% 100 == 0) print(i)
 }
 
-
-
-# this is clunky, i should streamline this
 print("reduce table and simplify variable names")
 
-keep <- c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour",
-  "black_age", "ind_win_cfrq_1p", "b_use_cfrq_1p", "b_use_win_cfrq_1p",
-  "use_cfrq_1p", "use_win_cfrq_1p", "pop_win_cfrq_1p")
-
-d <- d[, keep]
-
-colnames(d) <- c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour",
-  "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win")
-
-# ind_win can go right?
+d <- rename(d, age = black_age)
+# d <- rename(d, ind_win = ind_win_cfrq_1p)
+d <- select(d, DT, PB, BN, komi, black_won, fourfour, age, ind_use, ind_win, ind_use_win, pop_use, pop_use_win, pop_win)
 
 print("drop all remaining games outside horizon cutoffs, or missing values")
 
 # using a 2-year cutoff, starting the calculations at 1954, we need games from 1956 onwards
 years <- as.numeric(substr(d$DT, 1, 4))
-drop <- which(years < 1956) # 155 games to drop
-d <- d[-drop, ] # 34380 games remaining
+drop <- which(years < 1956)
+d <- d[-drop, ]
 
 # drop any games that have missing values for any predictors
-drop <- which(apply(d, 1, function(z) any(is.na(z)))) # 3487 games to drop
-d <- d[-drop, ] # 30893 games remaining
+drop <- which(apply(d, 1, function(z) any(is.na(z))))
+d <- d[-drop, ]
 
 
 
@@ -119,11 +110,11 @@ d$pop_use_x_pop_use_win <- d$pop_use * d$pop_use_win
 d$pop_use_x_ind_win <- d$pop_use * d$ind_win
 d$ind_use_x_ind_win <- d$ind_use * d$ind_win
 
-stopifnot(nrow(d) == 30006)
+stopifnot(nrow(d) == 30671)
 
 stopifnot(!any(is.na(d)))
 
-stopifnot(all(c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour", "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win", "ind", "age_group", "ind_use_x_ind_use_win", "pop_use_x_pop_use_win", "pop_use_x_ind_win", "ind_use_x_ind_win") %in% colnames(d)))
+stopifnot(all(c("DT", "PB", "BN", "komi", "black_won", "fourfour", "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win", "ind", "age_group", "ind_use_x_ind_use_win", "pop_use_x_pop_use_win", "pop_use_x_ind_win", "ind_use_x_ind_win") %in% colnames(d)))
 
 cor_check <- c("black_won", "fourfour", "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win", "ind", "ind_use_x_ind_use_win", "pop_use_x_pop_use_win", "pop_use_x_ind_win", "ind_use_x_ind_win")
 cors <- cor(d[,cor_check])

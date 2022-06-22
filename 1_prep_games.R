@@ -251,36 +251,44 @@ d$date[add] <- paste0(d$date[add], "-07-01")
 add <- which(nchar(d$date) == 7)
 d$date[add] <- paste0(d$date[add], "-15")
 
+add <- grep("\\d{4}\\s", d$date)
+d$date[add] <- paste0(substr(d$date[add], 1, 4), "-07-01")
+
+tar <- grep("\\d{4}-\\d{2}\\s", d$date)
+d$date[tar] <- paste0(substr(d$date[tar], 1, 7), "-15")
+tar <- which(substr(d$date, 8, 8) == "~")
+d$date[tar] <- paste0(substr(d$date[tar], 1, 7), "-15")
+
 d$date[which(d$date == "1950, end")] <- "1950-12-01"
+d$date[which(d$date == "1932-12,19")] <- "1932-12-19"
+d$date[which(d$date == "2001-02-29")] <- "2001-02-28"
+d$date[which(d$date == "1999-02-29")] <- "1999-02-28"
+
+d$date[which(d$date == "1968-00-00")] <- "1968-07-01"
+d$date[which(d$date == "1970-00-00")] <- "1970-07-01"
+d$date[which(d$date == "1989-04-00")] <- "1989-04-15"
+d$date[which(d$date == "1989-04-00")] <- "1989-04-15"
+d$date[which(d$date == "1999-09-00")] <- "1999-09-15"
+d$date[which(d$date == "2005, Spri")] <- "2005-04-15"
 
 d$DT <- as.Date(d$date)
 
 
 cat("drop games outside our target sample\n")
-
 drop <- which(is.na(d$DT))
-stopifnot(length(drop) == 4800) # about 8% dont have a standard date
+stopifnot(length(drop) == 4327) # about 8% dont have a standard date
 d <- d[-drop,]
 
 # drop games before 1954
-
-drop <- which(substr(d$DT, 1, 4) < 1954)
+drop <- which(as.numeric(d$year) < 1954)
 d <- d[-drop,]
 
-# drop games that were unfinished, jigo (tied) or unknown outcome
-drop <- which(!substr(d$RE, 1, 1) %in% c("B", "W"))
+# drop games with unusual results
+drop <- which(substr(d$RE, 1, 1) %in% c("?", "U"))
 d <- d[-drop,]
 
 # drop handicapped games
 drop <- which(!is.na(d$HA))
-d <- d[-drop, ]
-
-# drop games played by ranked amateurs
-drop <- sort(unique(c(grep("ama|Ama", d$BR), grep("ama|Ama", d$WR))))
-d <- d[-drop, ]
-
-# drop a game with unknown player
-drop <- which(d$PW == "?")
 d <- d[-drop, ]
 
 
@@ -292,7 +300,7 @@ d$black_won <- substr(d$RE, 1, 1) == "B"
 d$komi <- as.numeric(d$KM) - 5.5 # re-centering on modal komi amount
 d$fourfour <- as.numeric(d$m1 %in% c("pd", "dp", "dd", "pp"))
 
-stopifnot(nrow(d) == 46328)
+stopifnot(nrow(d) == 48082)
 
 
 
@@ -317,8 +325,9 @@ d <- d[o,]
 
 stopifnot(all(c("PB", "BR", "DT", "year", "KM", "RE", "HA", "GC", "filename", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour") %in% colnames(d)))
 
-stopifnot(nrow(d) == 46328) # previously 48370, what more can we save?
-stopifnot(mean(is.na(d$black_age)) < 0.29)
+stopifnot(nrow(d) == 48082)
+
+stopifnot(mean(is.na(d$black_age)) < 0.31)
 stopifnot(!any(is.na(as.Date(d$DT))))
 stopifnot(!any(is.na(d$fourfour)))
 stopifnot(min(d$year) == 1954)
