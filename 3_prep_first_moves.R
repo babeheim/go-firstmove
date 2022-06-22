@@ -18,12 +18,20 @@ black_game_counts <- sort(table(d$PB), decreasing = TRUE)
 black_game_counts <- black_game_counts[black_game_counts > 49]
 black_players_studied <- names(black_game_counts)
 
-drop <- which(!d$PB %in% black_players_studied) # 13834 games to drop
-d <- d[-drop, ] # 34536 games remaining
+stopifnot(length(black_players_studied) == 207) # only 200 with kaya
+
+drop <- which(!d$PB %in% black_players_studied)
+stopifnot(length(drop) == 13732) # only 13301 with kaya
+d <- d[-drop, ]
 
 
 
 print("prepared predictors based on a retrospective time horizon")
+
+d$DT <- as.Date(d$DT)
+
+# for this approach to work, games must be ordered from oldest (top) to newest (bottom)
+stopifnot(all(diff(d$DT) >= 0))
 
 period_length <- 2
 
@@ -112,6 +120,7 @@ d$pop_44xb_win <- d$pop_44 * d$b_win
 d$b_44xb_win <- d$b_44 * d$b_win
 
 stopifnot(nrow(d) == 31133)
+
 stopifnot(!any(is.na(d)))
 
 stopifnot(all(c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour", "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB_id", "b_age_group", "b_44xb_win_44", "pop_44xpop_win_44", "pop_44xb_win", "b_44xb_win") %in% colnames(d)))

@@ -21,3 +21,4 @@ save_output <- TRUE
 n_iter <- 2000
 
 source("R/misc_functions.R")
+source("R/sgf_functions.R")

@@ -4,12 +4,11 @@ if (scaffold) {
   source("project_support.R")
 }
 
-
-# print("extract raw data")
+print("extract raw data")
 
 have_raw_data <- file.exists("raw_data/GoGoD CD 2009.zip")
 
-# have_raw_data <- FALSE
+have_raw_data <- FALSE
 
 if (have_raw_data) {
 
@@ -36,7 +35,7 @@ if (have_raw_data) {
 
 print("load game data")
 
-d <- read.csv("./raw_data/gogod_database.csv", stringsAsFactors = FALSE)
+d <- read.csv("./raw_data/gogod_database.csv")
 
 stopifnot(nrow(d) == 60350) # previously 61807
 
@@ -320,14 +319,20 @@ player_list <- sort(unique(c(d$PB, d$PW)))
 n_players <- length(player_list)
 d$black_won <- as.numeric(substr(d$RE, 1, 1) == "B")
 # note that we are ignoring ties
+
 d$komi <- as.numeric(d$KM) - 5.5 # re-centering on modal komi amount
 
 first_move <- substr(d$move.string, 4, 5)
+
+d$m1 <- substr(d$move.string, 4, 5)
+d$m2 <- substr(d$move.string, 10, 11)
+
 d$fourfour <- as.numeric(first_move %in% c("pd", "dp", "dd", "pp"))
+
 
 # checks
 
-stopifnot(all(c("ID", "PB", "DT", "year", "KM", "RE", "HA", "GC", "filename", "move.string", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour", "filename") %in% colnames(d)))
+stopifnot(all(c("ID", "PB", "DT", "year", "KM", "RE", "HA", "GC", "filename", "m1", "m2", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour", "filename") %in% colnames(d)))
 
 stopifnot(nrow(d) == 48133) # previously 48370
 stopifnot(mean(is.na(d$black_age)) < 0.29)

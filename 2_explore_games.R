@@ -16,13 +16,13 @@ stopifnot(nrow(games) == 48133)
 
 print("identify move variants")
 
-first_move <- substr(games$move.string, 4, 5)
+first_move <- games$m1
+second_move <- games$m2
+
 games$fourfour <- as.numeric(first_move %in% c("dd", "dp", "pd", "pp"))
 games$threefour <- as.numeric(first_move %in% c(c("cd", "dc"), c("cp", "dq"),
   c("pc", "qd"), c("pq", "qp")))
 games$threethree <- as.numeric(first_move %in% c("cc", "cq", "qc", "qq"))
-
-second_move <- substr(games$move.string, 10, 11)
 
 games$second_dd <- first_move == "pd" & second_move == "dd" |
                    first_move == "dd" & second_move == "dp" |

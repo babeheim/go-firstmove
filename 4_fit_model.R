@@ -38,7 +38,6 @@ dat_list <- list(
   N_b_age_group = n_age_groups
 )
 
-
 horizon24 <- stan(file = "./stan/horizon24.stan", data = dat_list,
   iter = n_iter, chains = 3, cores = 3)
 
