@@ -310,7 +310,7 @@ d$fourfour <- as.numeric(first_move %in% c("pd", "dp", "dd", "pp"))
 
 # checks
 
-all(c("ID", "PB", "DT", "year", "KM", "RE", "HA", "GC", "filename", "move.string", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour", "filename") %in% colnames(d))
+stopifnot(all(c("ID", "PB", "DT", "year", "KM", "RE", "HA", "GC", "filename", "move.string", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour", "filename") %in% colnames(d)))
 
 stopifnot(nrow(d) == 48370)
 stopifnot(mean(is.na(d$black_age)) < 0.29)
@@ -321,11 +321,11 @@ stopifnot(max(d$year) == 2009)
 
 print("save cleaned dataset to file")
 
-write.csv(d, "./temp/gogod_cleaned.csv", row.names = FALSE)
+write.csv(d, "./temp/games.csv", row.names = FALSE)
 
 if (save_output){
   dir_init("./output")
-  file.copy("./temp/gogod_cleaned.csv", "./output")
+  file.copy("./temp/games.csv", "./output")
 }
 
 if (!save_temp) unlink("./temp", recursive = TRUE)

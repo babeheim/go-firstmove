@@ -10,7 +10,7 @@ dir_init("./temp")
 
 print("load game data")
 
-games <- read.csv("./inputs/gogod_cleaned.csv", stringsAsFactors = FALSE)
+games <- read.csv("./inputs/games.csv", stringsAsFactors = FALSE)
 
 
 

@@ -11,7 +11,7 @@ dir_init("./temp")
 
 print("load game data")
 
-d <- read.csv("./inputs/gogod_cleaned.csv", stringsAsFactors = FALSE)
+d <- read.csv("./inputs/games.csv", stringsAsFactors = FALSE)
 
 print("exclude players with less than 50 games")
 
@@ -113,11 +113,18 @@ d$pop_44xpop_win_44 <- d$pop_44 * d$pop_win_44
 d$pop_44xb_win <- d$pop_44 * d$b_win
 d$b_44xb_win <- d$b_44 * d$b_win
 
+stopifnot(nrow(d) == 30895)
+stopifnot(!any(is.na(d)))
 
+stopifnot(all(c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour", "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB_id", "b_age_group", "b_44xb_win_44", "pop_44xpop_win_44", "pop_44xb_win", "b_44xb_win") %in% colnames(d)))
+
+cor_check <- c("black_won", "fourfour", "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB_id", "b_44xb_win_44", "pop_44xpop_win_44", "pop_44xb_win", "b_44xb_win")
+cors <- cor(d[,cor_check])
+stopifnot(!any(abs(cors[lower.tri(cors)]) > 0.9))
 
 print("save data to file")
 
-write.csv(d, "./temp/fourfour_final.csv", row.names = FALSE) # 30893 remaining
+write.csv(d, "./temp/first_moves.csv", row.names = FALSE) # 30893 remaining
 
 
 
@@ -125,7 +132,7 @@ write.csv(d, "./temp/fourfour_final.csv", row.names = FALSE) # 30893 remaining
 
 if (save_output) {
   dir_init("./output")
-  file.copy("./temp/fourfour_final.csv", "./output")
+  file.copy("./temp/first_moves.csv", "./output")
 }
 
 if (!save_temp) unlink("./temp", recursive = TRUE)
