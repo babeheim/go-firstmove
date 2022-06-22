@@ -23,27 +23,24 @@ In R, set the working directory to that containing this readme file. For example
   setwd('~/Desktop/go-firstmove')
 ```
 
-if the folder containing the project is named 'go-firstmove' and on your Desktop. You can tell if you are in the right place by typing in `dir()` and seeing this readme.txt file. The analysis takes as input two files:
+if the folder containing the project is named 'go-firstmove' and on your Desktop. You can tell if you are in the right place by typing in `dir()` and seeing this readme.txt file.
 
-- 'gogod_gamedata_c.csv' - game information for the professional Go games used in this analysis
+The `raw_data/` folder contains two files from which all calculations are derived:
 
-- 'PB Biographical Data.csv' - a list biographical details of the professional Go players in our database
+- `gogod_database.csv` - game information for the professional Go games used in this analysis, drawn from the Games of Go on Disk (GoGoD) database, 2009 edition.
+
+- `players.csv` - a list biographical details of the professional Go players in our database, compiled from (Sensei's Library)[https://senseis.xmp.net/] in 2010-2011.
 
 The analysis itself is broken up into independent modules that pass outputs to each other. The whole process runs by typing one command into R,
 
-```
-  source('./run_project.r')
+```r
+  source('./run_project.R')
 ```
 
-with the project folder as the working directory. If all goes well, each step of the analysis will execute in sequence, and write the final tables and figures into an 'output' folder, along with a runtime log.
+with the project folder as the working directory. If all goes well, each step of the analysis will execute in sequence, and write the final tables and figures into the `figures/` folder, along with a runtime log.
 
-By default the analysis will delete all temporary files and folders, but if you want to see all intermediate steps you can disable this by flipping the `save_temp` variable in 'project_support.r' from `FALSE` to `TRUE`.
+If one has access to the original GoGoD database of Smart Go Format (SGF) files, the `1_prep_games.R` script will draw from those to produce the `raw_data/gogod_database.csv`. Specifically, the code will look for a ZIP file called `GoGoD CD 2009.zip` in the `raw_data/` folder.
 
 The total time until completion will vary by machine but should take several hours.
 
-The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at https://github.com/babeheim.
-
-# To-Dos
-
-- diagnositics on model fits
-- add models with different time horizons per supplementary
+The project is maintained by Bret Beheim (beheim@gmail.com) and is hosted at https://github.com/babeheim/go-firstmove.
