@@ -48,7 +48,7 @@ for (i in 1:n_games) {
 }
 
 d$b_use_cfrq_1p <- NA
-d$b_win_cfrq_1p <- NA
+d$ind_win_cfrq_1p <- NA
 d$b_use_win_cfrq_1p <- NA
 d$use_cfrq_1p <- NA
 d$use_win_cfrq_1p <- NA
@@ -67,7 +67,7 @@ for (i in 1:n_games) {
   focal_as_white <- d$PW == focal_player
   
   d$b_use_cfrq_1p[i] <- mean(d$fourfour[focal_as_black & valid_range]) - 0.5
-  d$b_win_cfrq_1p[i] <- mean(d$black_won[focal_as_black & valid_range]) -
+  d$ind_win_cfrq_1p[i] <- mean(d$black_won[focal_as_black & valid_range]) -
     mean(d$black_won[valid_range])
   d$b_use_win_cfrq_1p[i] <- mean(d$black_won[focal_as_black & d$fourfour &
     valid_range]) - mean(d$black_won[focal_as_black & valid_range])
@@ -80,15 +80,15 @@ for (i in 1:n_games) {
 print("reduce table and simplify variable names")
 
 keep <- c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour",
-  "black_age", "b_win_cfrq_1p", "b_use_cfrq_1p", "b_use_win_cfrq_1p",
+  "black_age", "ind_win_cfrq_1p", "b_use_cfrq_1p", "b_use_win_cfrq_1p",
   "use_cfrq_1p", "use_win_cfrq_1p", "pop_win_cfrq_1p")
 
 d <- d[, keep]
 
 colnames(d) <- c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour",
-  "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win")
+  "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win")
 
-
+# ind_win can go right?
 
 print("drop all remaining games outside horizon cutoffs, or missing values")
 
@@ -107,25 +107,25 @@ print("create remaining predictors for STAN model")
 
 # create integer player IDs for STAN
 PB_list <- sort(unique(d$PB))
-d$PB_id <- match(d$PB, PB_list)
+d$ind <- match(d$PB, PB_list)
 
 # create integer ages starting at 1 for varying effects in STAN
-b_age_list <- sort(unique(d$b_age))
-d$b_age_group <- match(d$b_age, b_age_list)
+age_list <- sort(unique(d$age))
+d$age_group <- match(d$age, age_list)
 
 # create interaction terms
-d$b_44xb_win_44 <- d$b_44 * d$b_win_44
-d$pop_44xpop_win_44 <- d$pop_44 * d$pop_win_44
-d$pop_44xb_win <- d$pop_44 * d$b_win
-d$b_44xb_win <- d$b_44 * d$b_win
+d$ind_use_x_ind_use_win <- d$ind_use * d$ind_use_win
+d$pop_use_x_pop_use_win <- d$pop_use * d$pop_use_win
+d$pop_use_x_ind_win <- d$pop_use * d$ind_win
+d$ind_use_x_ind_win <- d$ind_use * d$ind_win
 
 stopifnot(nrow(d) == 31133)
 
 stopifnot(!any(is.na(d)))
 
-stopifnot(all(c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour", "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB_id", "b_age_group", "b_44xb_win_44", "pop_44xpop_win_44", "pop_44xb_win", "b_44xb_win") %in% colnames(d)))
+stopifnot(all(c("DT", "PB", "BN", "komi", "BR", "black_won", "fourfour", "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win", "ind", "age_group", "ind_use_x_ind_use_win", "pop_use_x_pop_use_win", "pop_use_x_ind_win", "ind_use_x_ind_win") %in% colnames(d)))
 
-cor_check <- c("black_won", "fourfour", "b_age", "b_win", "b_44", "b_win_44", "pop_44", "pop_win_44", "pop_win", "PB_id", "b_44xb_win_44", "pop_44xpop_win_44", "pop_44xb_win", "b_44xb_win")
+cor_check <- c("black_won", "fourfour", "age", "ind_win", "ind_use", "ind_use_win", "pop_use", "pop_use_win", "pop_win", "ind", "ind_use_x_ind_use_win", "pop_use_x_pop_use_win", "pop_use_x_ind_win", "ind_use_x_ind_win")
 cors <- cor(d[,cor_check])
 stopifnot(!any(abs(cors[lower.tri(cors)]) > 0.9))
 

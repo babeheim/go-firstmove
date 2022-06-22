@@ -8,12 +8,12 @@ d <- read.csv("first_moves.csv")
 
 stopifnot(nrow(d) == 31133)
 
-n_age_groups <- length(unique(d$b_age_group))
+n_age_groups <- length(unique(d$age_group))
 
 # n_obs <- 100
 # keep <- sample(1:nrow(d), n_obs)
 # d <- d[keep,]
-# d$PB_id <- match(d$PB_id, unique(d$PB_id))
+# d$ind <- match(d$ind, unique(d$ind))
 
 print("fit model to data")
 
@@ -22,20 +22,20 @@ print("fit model to data")
 dat_list <- list(
   N = nrow(d),
   fourfour = d$fourfour,
-  b_44 = d$b_44,
-  pop_44 = d$pop_44,
-  PB_id = d$PB_id,
-  b_age_group = d$b_age_group,
-  b_44xb_win_44 = d$b_44xb_win_44,
-  b_44xb_win = d$b_44xb_win,
-  b_win_44 = d$b_win_44,
-  pop_44xpop_win_44 = d$pop_44xpop_win_44,
-  pop_44xb_win = d$pop_44xb_win,
-  pop_win_44 = d$pop_win_44,
+  ind_use = d$ind_use,
+  pop_use = d$pop_use,
+  ind = d$ind,
+  age_group = d$age_group,
+  ind_use_x_ind_use_win = d$ind_use_x_ind_use_win,
+  ind_use_x_ind_win = d$ind_use_x_ind_win,
+  ind_use_win = d$ind_use_win,
+  pop_use_x_pop_use_win = d$pop_use_x_pop_use_win,
+  pop_use_x_ind_win = d$pop_use_x_ind_win,
+  pop_use_win = d$pop_use_win,
   komi = d$komi,
   bin_total = rep(1, nrow(d)),
-  N_PB_id = length(unique(d$PB_id)),
-  N_b_age_group = n_age_groups
+  N_ind = length(unique(d$ind)),
+  N_age_group = n_age_groups
 )
 
 horizon24 <- stan(file = "./stan/horizon24.stan", data = dat_list,
