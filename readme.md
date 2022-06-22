@@ -27,7 +27,7 @@ if the folder containing the project is named 'go-firstmove' and on your Desktop
 
 The `raw_data/` folder contains two files from which all calculations are derived:
 
-- `gogod_database.csv` - game information for the professional Go games used in this analysis, drawn from the Games of Go on Disk (GoGoD) database, 2009 edition.
+- `gogod_database.csv` - game information for the professional Go games used in this analysis, drawn from the [Games of Go on Disk](https://gogodonline.co.uk/) (GoGoD) database, 2009 edition. This database is commercially available for a small fee.
 
 - `players.csv` - a list biographical details of the professional Go players in our database, compiled from (Sensei's Library)[https://senseis.xmp.net/] in 2010-2011.
 

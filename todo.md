@@ -5,7 +5,7 @@
 
 [-] work harder to save more games in 1_prep_data
 [-] confirm everything works on the cluster 
-[-] update readme
+[x] update readme
 
 [!] convert figures from pdf to tikz
 [!] convert rstan to cmdstan, plus all posterior calls with {posterior}
