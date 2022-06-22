@@ -8,6 +8,8 @@ print("extract raw data")
 
 have_raw_dataset <- file.exists("raw_data/GoGoD CD 2009.zip")
 
+have_raw_dataset <- FALSE
+
 if (have_raw_dataset) {
 
   # this script requires access to the 2009 GoGoD CD, here stored as a zip file
