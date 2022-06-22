@@ -61,7 +61,7 @@ model{
   for (j in 1:N_age_group) vary_age_group[j] ~ multi_normal(zeros_age_group,
     Sigma_age_group);
   // Fixed effects
-  for (i in 1:N) {
+  for (i in 1:N_games) {
     vary[i] = vary_ind[ind[i],1]
         + vary_ind[ind[i],2] * ind_use[i]
         + vary_ind[ind[i],3] * pop_use[i]
@@ -87,7 +87,7 @@ generated quantities{
   real vary[N_games];
   real glm[N_games];
   dev = 0;
-  for (i in 1:N) {
+  for (i in 1:N_games) {
     vary[i] = vary_ind[ind[i],1]
         + vary_ind[ind[i],2] * ind_use[i]
         + vary_ind[ind[i],3] * pop_use[i]
@@ -106,4 +106,4 @@ generated quantities{
     dev = dev + (-2) * binomial_lpmf(fourfour[i] | bin_total[i], inv_logit(glm[i]));
   }
 }
- 
+

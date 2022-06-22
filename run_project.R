@@ -1,14 +1,7 @@
 
 rm(list = ls())
 
-start_time <- Sys.time()
-
-source("./project_support.R")
-
-dir_init("./RData")
-dir_init("./figures")
-
-tic.clearlog()
+source("0_init_project.R")
 
 ##############
 

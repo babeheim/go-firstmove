@@ -10,10 +10,10 @@ stopifnot(nrow(d) == 31133)
 
 n_age_groups <- length(unique(d$age_group))
 
-n_obs <- 100
-keep <- sample(1:nrow(d), n_obs)
-d <- d[keep,]
-d$ind <- match(d$ind, unique(d$ind))
+# n_obs <- 100
+# keep <- sample(1:nrow(d), n_obs)
+# d <- d[keep,]
+# d$ind <- match(d$ind, unique(d$ind))
 
 print("fit model to data")
 
