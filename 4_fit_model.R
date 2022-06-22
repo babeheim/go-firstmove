@@ -1,0 +1,45 @@
+
+if (scaffold) {
+  rm(list = ls())
+  source("project_support.R")
+}
+
+d <- read.csv("first_moves.csv")
+
+stopifnot(nrow(d) == 31133)
+
+n_age_groups <- length(unique(d$b_age_group))
+
+# n_obs <- 100
+# keep <- sample(1:nrow(d), n_obs)
+# d <- d[keep,]
+# d$PB_id <- match(d$PB_id, unique(d$PB_id))
+
+print("fit model to data")
+
+# fit the 24 month model
+
+dat_list <- list(
+  N = nrow(d),
+  fourfour = d$fourfour,
+  b_44 = d$b_44,
+  pop_44 = d$pop_44,
+  PB_id = d$PB_id,
+  b_age_group = d$b_age_group,
+  b_44xb_win_44 = d$b_44xb_win_44,
+  b_44xb_win = d$b_44xb_win,
+  b_win_44 = d$b_win_44,
+  pop_44xpop_win_44 = d$pop_44xpop_win_44,
+  pop_44xb_win = d$pop_44xb_win,
+  pop_win_44 = d$pop_win_44,
+  komi = d$komi,
+  bin_total = rep(1, nrow(d)),
+  N_PB_id = length(unique(d$PB_id)),
+  N_b_age_group = n_age_groups
+)
+
+
+horizon24 <- stan(file = "./stan/horizon24.stan", data = dat_list,
+  iter = n_iter, chains = 3, cores = 3)
+
+save(horizon24, file = "./RData/horizon24.RData")

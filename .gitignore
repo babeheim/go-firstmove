@@ -47,7 +47,7 @@ Thumbs.db
 *.Rapp.history
 *.Rhistory
 *.robj
-
+*.RDS
 
 */inputs
 */output
@@ -56,3 +56,6 @@ Thumbs.db
 
 */markdown/*
 */tex/*
+
+games.csv
+figures/
