@@ -1,4 +1,12 @@
 
+prep_latex_variables <- function(named_list) {
+  out <- character()
+  for (i in 1:length(named_list)) {
+    out[i] <- paste0("\\newcommand{\\", names(named_list)[i], "}{", named_list[[i]], "}")
+  }
+  return(out)
+}
+
 create_database_fast <- function(sgf_paths, num_cores = 3) {
   data_list <- parallel::mclapply(seq_along(sgf_paths), function(z) {
     game_data <- read_sgf(sgf_paths[z], rotate = FALSE)

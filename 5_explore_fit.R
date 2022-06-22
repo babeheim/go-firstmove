@@ -8,58 +8,60 @@ if (scaffold) {
 
 print("load fitted models")
 
-load("./RData/horizon24.RData")
-d <- read.csv("first_moves.csv", stringsAsFactors = FALSE)
-p <- extract(horizon24)
+load("horizon24.RData")
+d <- read.csv("first_moves.csv")
+sam <- extract(horizon24)
 
 
 
 print("calculate key numerical results and save to disk")
 
-mres <- list()
+calcs <- list()
 
 # model intercept of 53.2%
-post_logodds <- p$a
-mres$pr_44_baseline <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+post_logodds <- sam$a
+calcs$prIndUseBaseline <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
 
 # recent personal use predicts current use; 60% use outcome is 58.7% (OR 9.39 ????) ceteris paribus
-post_logodds <- p$a + p$b_ind_use * 0.1
-mres$pr_44_b_use_60 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
-mres$or_44_b_use <- sprintf("%.2f", mean(p$b_ind_use))
+post_logodds <- sam$a + sam$b_ind_use * 0.1
+calcs$prIndUseSixty <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+calcs$orIndUse <- sprintf("%.2f", mean(sam$b_ind_use))
 
 # recent win rate predicts current use, OR of 2.77
-post_logodds <- p$a + p$b_ind_use * 0.1
-mres$or_ind_use_win <- sprintf("%.2f", mean(exp(p$b_ind_use_win)))
+post_logodds <- sam$a + sam$b_ind_use * 0.1
+calcs$orIndUseWin <- sprintf("%.2f", mean(exp(sam$b_ind_use_win)))
 
 # recent personal use and win rate interaction effect exists
 
 # recent pop use of 60% means expected prob is 59%, OR 10.475
-post_logodds <- p$a + p$b_pop_use * 0.1
-mres$pr_44_pop_use_60 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
-mres$or_44_pop_use <- sprintf("%.2f", mean(exp(p$b_pop_use)))
+post_logodds <- sam$a + sam$b_pop_use * 0.1
+calcs$prPopUseSixty <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+calcs$orPopUse <- sprintf("%.2f", mean(exp(sam$b_pop_use)))
 
 # recent pop use of 60% and +10% performance, its 61.4%
 # is this right? what *are* the centerings
-post_logodds <- p$a + p$b_pop_use * 0.1 + p$b_pop_use_win * 0.1 + p$b_pop_use_x_pop_use_win * 0.1 * 0.1
-mres$pr_44_pop_use_60_win_10 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+post_logodds <- sam$a + sam$b_pop_use * 0.1 + sam$b_pop_use_win * 0.1 + sam$b_pop_use_x_pop_use_win * 0.1 * 0.1
+calcs$prPopUseSixty_win_10 <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
 
 # social knowledge is 1.05x more important
-social_indy_ratio <- p$b_pop_use / p$b_ind_use
-mres$social_indy_ratio <- sprintf("%.2f", mean(social_indy_ratio))
+social_indy_ratio <- sam$b_pop_use / sam$b_ind_use
+calcs$socialIndyRatio <- sprintf("%.2f", mean(social_indy_ratio))
 
 # varying effect sigma of 4.00 for player intecepts
-mres$player_indy_varef <- sprintf("%.2f", mean(p$Sigma_ind[ , 2, 2]), 2)
+calcs$playerIndyVaref <- sprintf("%.2f", mean(sam$Sigma_ind[ , 2, 2]), 2)
 
 # varying effect sigma of 9.77 for player slopes on pop knowledge
-mres$player_social_varef <- sprintf("%.2f", mean(p$Sigma_ind[ , 3, 3]), 2)
+calcs$playerSocialVaref <- sprintf("%.2f", mean(sam$Sigma_ind[ , 3, 3]), 2)
 
-save(mres, file = "./figures/model_result_list.RData")
+# save(calcs, file = "./RData/model_result_list.RData")
+
+writeLines(prep_latex_variables(calcs), "./figures/keyModelCalcs.tex")
 
 
 
 print("extract posterior estimates and create table of model estimates")
 
-b_post <- as.data.frame(p[1:10])
+b_post <- as.data.frame(sam[1:10])
 colnames(b_post) <- c("a", "ind_use", "ind_use_x_ind_use_win",
   "ind_use_x_ind_win", "ind_use_win", "pop_use", "pop_use_x_pop_use_win",
   "pop_use_x_ind_win", "pop_use_win", "komi")
@@ -84,31 +86,31 @@ tab1 <- rbind(tab1[2:nrow(tab1), ], tab1[1, ])
 tab1 <- rbind(c("Fixed Effects", "Est.", "S.E."), tab1)
 tab1 <- rbind(tab1, c("Varying Effects", "", ""))
 
-playerID_mean <- sprintf("%.2f", mean(p$Sigma_ind[ , 1, 1]))
-playerID_se <- sprintf("%.2f", sd(p$Sigma_ind[ , 1, 1]), 2)
+playerID_mean <- sprintf("%.2f", mean(sam$Sigma_ind[ , 1, 1]))
+playerID_se <- sprintf("%.2f", sd(sam$Sigma_ind[ , 1, 1]), 2)
 
 tab1 <- rbind(tab1, c("Player$_j$", playerID_mean, playerID_se))
 
-playerIDxpersonal_mean <- sprintf("%.2f", mean(p$Sigma_ind[ , 2, 2]), 2)
-playerIDxpersonal_se <- sprintf("%.2f", sd(p$Sigma_ind[ , 2, 2]), 2)
+playerIDxpersonal_mean <- sprintf("%.2f", mean(sam$Sigma_ind[ , 2, 2]), 2)
+playerIDxpersonal_se <- sprintf("%.2f", sd(sam$Sigma_ind[ , 2, 2]), 2)
 
 tab1 <- rbind(tab1, c("$\\times$ Personal Fourfour Use Rate",
   playerIDxpersonal_mean, playerIDxpersonal_se))
 
-playerIDxpop_mean <- sprintf("%.2f", mean(p$Sigma_ind[ , 3, 3]), 2)
-playerIDxpop_se <- sprintf("%.2f", sd(p$Sigma_ind[ , 3, 3]), 2)
+playerIDxpop_mean <- sprintf("%.2f", mean(sam$Sigma_ind[ , 3, 3]), 2)
+playerIDxpop_se <- sprintf("%.2f", sd(sam$Sigma_ind[ , 3, 3]), 2)
 
 tab1 <- rbind(tab1, c("$\\times$ Population Fourfour Use Rate",
   playerIDxpop_mean, playerIDxpop_se))
 
-agexpersonal_mean <- sprintf("%.2f", mean(p$Sigma_age_group[ , 1, 1]), 2)
-agexpersonal_se <- sprintf("%.2f", sd(p$Sigma_age_group[ , 1, 1]), 2)
+agexpersonal_mean <- sprintf("%.2f", mean(sam$Sigma_age_group[ , 1, 1]), 2)
+agexpersonal_se <- sprintf("%.2f", sd(sam$Sigma_age_group[ , 1, 1]), 2)
 
 tab1 <- rbind(tab1, c("Age$_k$ $\\times$ Personal Fourfour Use Rate",
   agexpersonal_mean, agexpersonal_se))
 
-agexpop_mean <- sprintf("%.2f", mean(p$Sigma_age_group[ , 2, 2]), 2)
-agexpop_se <- sprintf("%.2f", sd(p$Sigma_age_group[ , 2, 2]), 2)
+agexpop_mean <- sprintf("%.2f", mean(sam$Sigma_age_group[ , 2, 2]), 2)
+agexpop_se <- sprintf("%.2f", sd(sam$Sigma_age_group[ , 2, 2]), 2)
 
 tab1 <- rbind(tab1, c("Age$_k$ $\\times$ Population Fourfour Use Rate",
   agexpop_mean, agexpop_se))
@@ -126,17 +128,17 @@ CH_cols <- sort(unique(d$ind[d$BN == "Chinese"]))
 SK_cols <- sort(unique(d$ind[d$BN == "Korean"]))
 TW_cols <- sort(unique(d$ind[d$BN == "Taiwanese"]))
 
-japanese_b_intercepts <- colMeans(p$vary_ind[ , JP_cols, 2])
-japanese_gamma_intercepts <- colMeans(p$vary_ind[ , JP_cols, 3])
+japanese_b_intercepts <- colMeans(sam$vary_ind[ , JP_cols, 2])
+japanese_gamma_intercepts <- colMeans(sam$vary_ind[ , JP_cols, 3])
 
-chinese_b_intercepts <- colMeans(p$vary_ind[ , CH_cols, 2])
-chinese_gamma_intercepts <- colMeans(p$vary_ind[ , CH_cols, 3])
+chinese_b_intercepts <- colMeans(sam$vary_ind[ , CH_cols, 2])
+chinese_gamma_intercepts <- colMeans(sam$vary_ind[ , CH_cols, 3])
 
-korean_b_intercepts <- colMeans(p$vary_ind[ , SK_cols, 2])
-korean_gamma_intercepts <- colMeans(p$vary_ind[ , SK_cols, 3])
+korean_b_intercepts <- colMeans(sam$vary_ind[ , SK_cols, 2])
+korean_gamma_intercepts <- colMeans(sam$vary_ind[ , SK_cols, 3])
 
-taiwanese_b_intercepts <- colMeans(p$vary_ind[ , TW_cols, 2])
-taiwanese_gamma_intercepts <- colMeans(p$vary_ind[ , TW_cols, 3])
+taiwanese_b_intercepts <- colMeans(sam$vary_ind[ , TW_cols, 2])
+taiwanese_gamma_intercepts <- colMeans(sam$vary_ind[ , TW_cols, 3])
 
 ja_n <- length(japanese_b_intercepts)
 ja_b_mean <- sprintf("%.2f", mean(japanese_b_intercepts), 2)
@@ -295,8 +297,8 @@ target_id <- unique(d$ind[d$PB == target])
 i <- as.numeric(target_id)
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] + mean(p$b_ind_use[thin]),
-  p$vary_ind[thin, i, 3] + mean(p$b_pop_use[thin]),
+points(sam$vary_ind[thin, i, 2] + mean(sam$b_ind_use[thin]),
+  sam$vary_ind[thin, i, 3] + mean(sam$b_pop_use[thin]),
   col = col.alpha(target_col, 0.3), pch = 20)
 
 target <- "Kato Atsushi"
@@ -305,9 +307,9 @@ target_id <- unique(d$ind[d$PB == target])
 i <- target_id
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] +
-  mean(p$b_ind_use[thin]), p$vary_ind[thin, i, 3] +
-  mean(p$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
+points(sam$vary_ind[thin, i, 2] +
+  mean(sam$b_ind_use[thin]), sam$vary_ind[thin, i, 3] +
+  mean(sam$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
 
 target <- "Takemiya Masaki"
 target_col <- my_cols[3]
@@ -315,9 +317,9 @@ target_id <- unique(d$ind[d$PB == target])
 i <- target_id
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] +
-  mean(p$b_ind_use[thin]), p$vary_ind[thin, i, 3] +
-  mean(p$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
+points(sam$vary_ind[thin, i, 2] +
+  mean(sam$b_ind_use[thin]), sam$vary_ind[thin, i, 3] +
+  mean(sam$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
 
 target <- "Hashimoto Shoji"
 target_col <- my_cols[4]
@@ -325,9 +327,9 @@ target_id <- unique(d$ind[d$PB == target])
 i <- target_id
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] +
-  mean(p$b_ind_use[thin]), p$vary_ind[thin, i, 3] +
-  mean(p$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
+points(sam$vary_ind[thin, i, 2] +
+  mean(sam$b_ind_use[thin]), sam$vary_ind[thin, i, 3] +
+  mean(sam$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
 
 target <- "Yi Se-tol"
 target_col <- my_cols[5]
@@ -335,9 +337,9 @@ target_id <- unique(d$ind[d$PB == target])
 i <- target_id
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] +
-  mean(p$b_ind_use[thin]), p$vary_ind[thin, i, 3] +
-  mean(p$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
+points(sam$vary_ind[thin, i, 2] +
+  mean(sam$b_ind_use[thin]), sam$vary_ind[thin, i, 3] +
+  mean(sam$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
 
 target <- "Cho Hun-hyeon"
 target_col <- my_cols[6]
@@ -345,9 +347,9 @@ target_id <- unique(d$ind[d$PB == target])
 i <- target_id
 target_name_list <- c(target_name_list, target)
 target_id_list <- c(target_id_list, target_id)
-points(p$vary_ind[thin, i, 2] +
-  mean(p$b_ind_use[thin]), p$vary_ind[thin, i, 3] +
-  mean(p$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
+points(sam$vary_ind[thin, i, 2] +
+  mean(sam$b_ind_use[thin]), sam$vary_ind[thin, i, 3] +
+  mean(sam$b_pop_use[thin]), col = col.alpha(target_col, 0.3), pch = 20)
 
 target_name_list[target_name_list == "Takemiya Masaki"] <- "Takemiya\nMasaki"
 target_name_list[target_name_list == "Yi Se-tol"] <- "Lee\nSedol"
@@ -356,7 +358,7 @@ target_name_list[target_name_list == "Hashimoto Shoji"] <- "   Hashimoto\n Shoji
 target_name_list[target_name_list == "Kato Atsushi"] <- "Kato\nAtsushi"
 target_name_list[target_name_list == "Peng Quan"] <- "Peng\nQuan"
 
-points(p$b_ind_use[thin], p$b_pop_use[thin], pch = 20,
+points(sam$b_ind_use[thin], sam$b_pop_use[thin], pch = 20,
   col = col.alpha("black", 0.3))
 
 abline(h = 0, lty = 2, col = col.alpha("black", 0.6))
@@ -364,22 +366,22 @@ abline(v = 0, lty = 2, col = col.alpha("black", 0.6))
 abline(0, 1, lty = 1, col = gray(0.3))
 
 for (i in 1:length(target_id_list)) {
-  text(mean(p$vary_ind[ , target_id_list[i], 2] +
-    p$b_ind_use), mean(p$vary_ind[ , target_id_list[i], 3] +
-    p$b_pop_use), target_name_list[i])
+  text(mean(sam$vary_ind[ , target_id_list[i], 2] +
+    sam$b_ind_use), mean(sam$vary_ind[ , target_id_list[i], 3] +
+    sam$b_pop_use), target_name_list[i])
 }
 
 # age 8 is "1", age 9 is "2", etc.
 n_ages <- length(unique(d$age_group))
 
-my_pop_means <- apply(p$vary_age_group[ , , 2], 2, mean) + mean(p$b_pop_use)
-my_pop_HPDI <- apply(p$vary_age_group[ , , 2], 2, HPDI) + mean(p$b_pop_use)
+my_pop_means <- apply(sam$vary_age_group[ , , 2], 2, mean) + mean(sam$b_pop_use)
+my_pop_HPDI <- apply(sam$vary_age_group[ , , 2], 2, HPDI) + mean(sam$b_pop_use)
 plot(my_pop_means, type = "p", ylim = c(-2, 9), xaxt = "n",
   ylab = "reliance on social information", xlab = "age (years)",
   xlim = c(3, 63), las = 1, col = "black", cex = 0.5, pch = 20)
 axis(1, at = seq(3, 78, by = 10), labels =  seq(3, 78, by = 10) + 7)
 for (i in 1:n_ages) lines(c(i, i), c(my_pop_HPDI[1, i], my_pop_HPDI[2, i]),
   col = "black")
-abline(h = mean(p$b_pop_use), lty = 2, col = "black")
+abline(h = mean(sam$b_pop_use), lty = 2, col = "black")
 
 dev.off()

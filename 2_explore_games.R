@@ -109,18 +109,16 @@ d$second_dc_win_frq <- tapply(1 - games$black_won[tar],
   games$year[tar], mean)[as.character(d$year)]
 
 
-
 print("calculate essential descriptive statistics of dataset")
 
-dres <- list()
+calcs <- list()
 
-frq_win_cor <- cor(d$fourfour_frq[10:52], d$fourfour_win_frq[10:52] - d$threefour_win_frq[10:52])
-dres$frq_win_cor_44 <- sprintf("%.2f", frq_win_cor)
+tar <- which(d$year %in% 1967:2009)
+frq_win_cor <- cor(d$fourfour_frq[tar], d$fourfour_win_frq[tar] - d$threefour_win_frq[tar])
+calcs$corFourFourFrqWin <- sprintf("%.2f", frq_win_cor)
+calcs$nGames <- nrow(games)
 
-dres$n_games <- nrow(games)
-dres$n_games_takemiya <- sum(games$PB == "Takemiya Masaki")
-
-save(dres, file = "./figures/data_result_list.RData")
+writeLines(prep_latex_variables(calcs), "figures/gameDescriptives.tex")
 
 
 
