@@ -292,9 +292,7 @@ d <- d[-drop, ]
 
 print("prepared predictors based on demographic data")
 
-bio_data <- read.csv("./inputs/PB Biographical Data.csv", stringsAsFactors = FALSE)
-bio_data$Birth.Year <- as.numeric(bio_data$Birth.Year)
-bio_data$Nationality <- gsub(" ", "", bio_data$Nationality)
+bio_data <- read.csv("./inputs/players.csv", stringsAsFactors = FALSE)
 
 d$BN <- bio_data$Nationality[match(d$PB, bio_data$Player.Name)]
 
