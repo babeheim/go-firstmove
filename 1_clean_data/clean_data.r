@@ -310,7 +310,16 @@ d$komi <- as.numeric(d$KM) - 5.5 # re-centering on modal komi amount
 first_move <- substr(d$move.string, 4, 5)
 d$fourfour <- as.numeric(first_move %in% c("pd", "dp", "dd", "pp"))
 
+# checks
 
+all(c("ID", "PB", "DT", "year", "KM", "RE", "HA", "GC", "filename", "move.string", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour", "filename") %in% colnames(d))
+
+stopifnot(nrow(d) == 48370)
+stopifnot(mean(is.na(d$black_age)) < 0.29)
+stopifnot(!any(is.na(as.Date(d$DT))))
+stopifnot(!any(is.na(d$fourfour)))
+stopifnot(min(d$year) == 1954)
+stopifnot(max(d$year) == 2009)
 
 print("save cleaned dataset to file")
 
