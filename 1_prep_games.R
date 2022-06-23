@@ -223,9 +223,20 @@ d$PW[tar] <- "Cho Hun-hyeon"
 # this is a guess on my part - it can"t be who it originally says (Cho Hye-yeon) because she wasn"t born yet!  it"s game 1970-75/1971-05-01a.sgf
 
 
-
-
 cat("clean dates\n")
+
+d$DT <- gsub("^Published ", "", d$DT)
+d$DT <- gsub("^Publihsed ", "", d$DT)
+d$DT <- gsub("^published ", "", d$DT)
+d$DT <- gsub("^Publsihed ", "", d$DT)
+d$DT <- gsub("^Recorded ", "", d$DT)
+d$DT <- gsub("^Broadcast ", "", d$DT)
+d$DT <- gsub("^Broadcast", "", d$DT)
+
+d$DT[which(d$DT == "Spring 1960")] <- "1960-04-15"
+d$DT[which(d$DT == "Spring 1994")] <- "1960-04-15"
+d$DT[which(d$DT == "Summer 1994")] <- "1960-06-15"
+d$DT[which(d$DT == "on 1981-01-04,11")] <- "1981-01-04"
 
 d$year <- as.numeric(substr(d$DT, 1, 4))
 
@@ -273,10 +284,9 @@ d$date[which(d$date == "2005, Spri")] <- "2005-04-15"
 
 d$DT <- as.Date(d$date)
 
-
 cat("drop games outside our target sample\n")
 drop <- which(is.na(d$DT))
-stopifnot(length(drop) == 4327) # about 8% dont have a standard date
+stopifnot(length(drop) == 925) # 2% bad
 d <- d[-drop,]
 
 # drop games before 1954
@@ -300,7 +310,7 @@ d$black_won <- substr(d$RE, 1, 1) == "B"
 d$komi <- as.numeric(d$KM) - 5.5 # re-centering on modal komi amount
 d$fourfour <- as.numeric(d$m1 %in% c("pd", "dp", "dd", "pp"))
 
-stopifnot(nrow(d) == 48082)
+stopifnot(nrow(d) == 49789)
 
 
 
@@ -325,7 +335,7 @@ d <- d[o,]
 
 stopifnot(all(c("PB", "BR", "DT", "year", "KM", "RE", "HA", "GC", "filename", "BN", "black_birth_year", "black_age", "black_won", "komi", "fourfour") %in% colnames(d)))
 
-stopifnot(nrow(d) == 48082)
+stopifnot(nrow(d) == 49789)
 
 stopifnot(mean(is.na(d$black_age)) < 0.31)
 stopifnot(!any(is.na(as.Date(d$DT))))

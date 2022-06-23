@@ -6,7 +6,7 @@ if (scaffold) {
 
 d <- read.csv("first_moves.csv")
 
-stopifnot(nrow(d) == 30671)
+stopifnot(nrow(d) == 31756)
 
 n_age_groups <- length(unique(d$age_group))
 

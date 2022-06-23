@@ -11,10 +11,6 @@ library(digest)
 expect_true(capabilities("png"))
 expect_true(capabilities("cairo"))
 
-expect_silent(system("xelatex -v"))
-expect_silent(system("bibtex -v"))
-expect_silent(system("pandoc -v"))
-
 scaffold <- TRUE
 n_iter <- 2000
 

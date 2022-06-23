@@ -10,7 +10,7 @@ print("load game data")
 
 games <- read.csv("games.csv")
 
-stopifnot(nrow(games) == 48082)
+stopifnot(nrow(games) == 49789)
 
 
 
@@ -116,7 +116,7 @@ calcs <- list()
 tar <- which(d$year %in% 1967:2009)
 frq_win_cor <- cor(d$fourfour_frq[tar], d$fourfour_win_frq[tar] - d$threefour_win_frq[tar])
 calcs$corFourFourFrqWin <- sprintf("%.2f", frq_win_cor)
-calcs$nGames <- nrow(games)
+calcs$nGames <- format(nrow(games), big.mark = ",", trim = TRUE)
 
 writeLines(prep_latex_variables(calcs), "figures/gameDescriptives.tex")
 

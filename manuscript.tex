@@ -43,8 +43,8 @@
 \usepackage{xunicode}
 \defaultfontfeatures{Mapping=tex-text}
 
-\definecolor{linenocolor}{gray}{0.5}
-\renewcommand\thelinenumber{\color{linenocolor}\arabic{linenumber}}
+% \definecolor{linenocolor}{gray}{0.5}
+% \renewcommand\thelinenumber{\color{linenocolor}\arabic{linenumber}}
 
 \usepackage{fix-cm}
 
@@ -67,8 +67,6 @@
 \input{figures/keyModelCalcs.tex}
 
 \begin{document}
-
-\maketitle
 
 \noindent\textsc{Abstract.}
 Human culture is widely believed to undergo evolution, via mechanisms rooted in the nature of human cognition. A number of theories predict the kinds of human learning strategies, as well as the population dynamics that result from their action. There is little work, however, that quantitatively examines the evidence for these strategies and resulting cultural evolution within human populations. One of the obstacles is the lack of individual-level data with which to link transmission events to larger cultural dynamics. Here, we address this problem with a rich quantitative database from the East Asian board game known as Go. We draw from a large archive of Go games spanning the last six decades of professional play, and find evidence that the evolutionary dynamics of particular cultural variants are driven by a mix of individual and social learning processes. Particular players vary dramatically in their sensitivity to population knowledge, which also varies by age and nationality. The dynamic patterns of opening Go moves are consistent with an ancient, ongoing arms race within the game itself.
@@ -117,7 +115,7 @@ Despite the conservatism of opening play in professional games, novel variations
 \begin{figure}[t]
   \begin{center}
     \includegraphics[scale=1.2]{./assets/m1FreqsWins.pdf}
-    \caption{The ebb and flow of the three major first move variants, with proportion of games won. The Fourfour's rise and fall, here broken into four eras, closely tracks with its relative performance (\textit{top}) since 1967 ($r=$ \corFourFourFrqWin{}). Similarly, the Threethree's brief efflorescence and extinction closely match its relative win rate. Because of its initial dominance, all win rates are expressed relative to the Threefour's, and the dotted gray line indicates the location of the 50\% (break-even) point.}
+    \caption{The ebb and flow of the three major first move variants, with proportion of games won. The Fourfour's rise and fall, here broken into four eras, closely tracks with its relative performance (\textit{top}) since 1967 ($r=$ \corFourFourFrqWin). Similarly, the Threethree's brief efflorescence and extinction closely match its relative win rate. Because of its initial dominance, all win rates are expressed relative to the Threefour's, and the dotted gray line indicates the location of the 50\% (break-even) point.}
     \label{fig:m1FreqsWins}
   \end{center}
 \end{figure}
@@ -154,7 +152,7 @@ Theoretical models and experiments have focused on two important forms of such s
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=1.2]{./pr44xPop.pdf}
+    \includegraphics[scale=1.2]{./figures/pr44xPop.pdf}
     \caption{Predicted probability of using the Fourfour by an average player at different values of population use, with means (dotted lines) and 95\% HPDI (solid regions). Per Table \ref{table:pr44_logistic_coefs}, the relative win rate of the Fourfour within the population regulates the effect of population use, -10\% versus the Threefour (orange), equal to the Threefour (light blue) and +10\% (dark blue). Outcome data is also shown via scatterplot.}
     \label{fig:pr44}
   \end{center}
@@ -173,7 +171,7 @@ Predictor variables for each game used a retrospective two-year window from the 
 \begin{table}[t]
   \centering
     \begin{tabular}{lrr}
-    \input{"./pr44_logistic_coefs.txt"}
+    \input{figures/pr44_logistic_coefs.txt}
     \end{tabular}
   \caption{Logistic regression estimates for Pr(Use Fourfour in game $i$)}
   \label{table:pr44_logistic_coefs}
@@ -183,17 +181,17 @@ Predictor variables for each game used a retrospective two-year window from the 
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=0.8]{./playerAgeBetaGamma.pdf}
+    \includegraphics[scale=0.8]{./figures/playerAgeBetaGamma.pdf}
     \caption{(\textit{left}) Six player-specific joint posterior densities of the importance of individual ($\beta_j$) and social ($\gamma_j$) information on predicting move outcome, along with the main effect density (black region). Players who lie above the line of equality (solid gray) are more predicted by recent population trends than individual experience, while the reverse is true for players below it. (\textit{right}) Estimates for the importance of social knowledge for each year of age $k$, showing means and 95\% HPDI intervals. Younger players tend to have values of $\gamma_k$ above the main effect mean $\gamma$ (dotted), but this declines as they age.}
   \label{fig:playerAgeBetaGamma}
   \end{center}
 \end{figure}
 
-With all predictors centered on means, the intercept estimates that an average Go player will use the Fourfour about pr44Baseline\% of the time during the study period (i.e. logit(.524)=0.10). A player's recent use of a particular opening move strongly predicts their future use; for an otherwise-average player who used the Fourfour about 60\% of their recent games, the probability they will use the Fourfour rises to pr44BUse60\% (OR: or44BUse{}). There is a smaller (OR: 2.77), but unambiguous, positive performance effect from past success with the Fourfour, adding about two percentage points to the probability of use for a player who has won 10\% more games using the Fourfour than his overall win rate. These two personal effects also interact, so that past success enhances the predictive power of past use (or vis versa).
+With all predictors centered on means, the intercept estimates that an average Go player will use the Fourfour about \prIndUseBaseline\% of the time during the study period (i.e. logit(.524)=0.10). A player's recent use of a particular opening move strongly predicts their future use; for an otherwise-average player who used the Fourfour about 60\% of their recent games, the probability they will use the Fourfour rises to \prIndUseSixty\% (OR: \orIndUse). There is a smaller (OR: \orIndUseWin), but unambiguous, positive performance effect from past success with the Fourfour, adding about two percentage points to the probability of use for a player who has won 10\% more games using the Fourfour than his overall win rate. These two personal effects also interact, so that past success enhances the predictive power of past use (or vis versa).
 
-Most important to the question of social learning and cultural evolution, though, is whether there is predictive value in the recent behavior of \textit{other} players, controlling for individual behavior. Indeed, when the Fourfour appears in 60\% of \textit{all} recent games, the expected probability of use by an average player rises from pr44Baseline\% to pr44PopUse60\% (OR: or44PopUse). Two important interaction effects regulate the frequency-dependence of a player's behavior; if the Fourfour appears in 60\% of recent professional games, \textit{and} its population performance is ten percentage points higher than that of its rival, the Threefour, the expected probability a player will use it rises from pr44PopUse60\% to pr44PopUse60Win10\% (Fig. \ref{fig:pr44}).
+Most important to the question of social learning and cultural evolution, though, is whether there is predictive value in the recent behavior of \textit{other} players, controlling for individual behavior. Indeed, when the Fourfour appears in 60\% of \textit{all} recent games, the expected probability of use by an average player rises from \prIndUseBaseline\% to \prPopUseSixty\% (OR: \orPopUse). Two important interaction effects regulate the frequency-dependence of a player's behavior; if the Fourfour appears in 60\% of recent professional games, \textit{and} its population performance is ten percentage points higher than that of its rival, the Threefour, the expected probability a player will use it rises from \prPopUseSixty\% to \prPopUseSixtyWinTen\% (Fig. \ref{fig:pr44}).
 
-Because the coefficient for personal use (which we call $\beta$) and that for population use ($\gamma$) have the same units, comparing their magnitudes tells us the relative predictive value of personal and population knowledge. For an average player, social knowledge is socialIndyRatio{} times more important than personal experience in predicting the outcome, but this belies the enormous variation from player to player. Partially pooling games of each Black player, we see a varying effects standard deviation of playerIndyVaref{} for the distribution of player-specific $\beta_j$. For population knowledge, the standard deviation across player intercepts is even larger, playerSocialVaref. Plotting the joint posterior densities of $\beta_j$ and $\gamma_j$ for each player $j$ (Fig. \ref{fig:playerAgeBetaGamma}, left) reveals that some professionals are substantially better predicted by social knowledge than by their own experiences, while other players are almost completely insensitive to population trends (foremost among them, Takemiya Masaki).
+Because the coefficient for personal use (which we call $\beta$) and that for population use ($\gamma$) have the same units, comparing their magnitudes tells us the relative predictive value of personal and population knowledge. For an average player, social knowledge is \socialIndyRatio{} times more important than personal experience in predicting the outcome, but this belies the enormous variation from player to player. Partially pooling games of each Black player, we see a varying effects standard deviation of \playerIndyVaref{} for the distribution of player-specific $\beta_j$. For population knowledge, the standard deviation across player intercepts is even larger, \playerSocialVaref. Plotting the joint posterior densities of $\beta_j$ and $\gamma_j$ for each player $j$ (Fig. \ref{fig:playerAgeBetaGamma}, left) reveals that some professionals are substantially better predicted by social knowledge than by their own experiences, while other players are almost completely insensitive to population trends (foremost among them, Takemiya Masaki).
 
 Including player age as a varying effect regulating magnitude of $\beta$ and $\gamma$ also shows learning heterogeneity over the life course (Fig. \ref{fig:playerAgeBetaGamma}, right). The games of the youngest professionals, those between the ages of 14 and 18, are least predicted by personal experience and most by population trends. After age 20, the balance steadily shifts towards personal experience, peaking at age 27 well above the average $\beta$ of 2.24. Players older than 35 appear to return to average levels of social learning; with a few deviations, no trend is apparent after this age.
 
@@ -208,7 +206,7 @@ According to player-specific posterior estimates in Fig. \ref{fig:playerAgeBetaG
 \begin{table}[t]
   \centering
     \begin{tabular}{lrrrrr}
-    \input{"./national_coef_averages.txt"}
+    \input{figures/national_coef_averages.txt}
     \end{tabular}
     \caption{National averages of player-specific estimates of reliance on individual ($\beta_j$) and social ($\gamma_j$) information.}
     \label{table:national_coef_averages}
@@ -262,6 +260,6 @@ In addition to interactions for $q_i$ and $r_i$, which allow the Fourfour's rece
 
 The controls for each game $i$ are made up of six predictors: White's win rate using the M1 Fourfour in past games (where they played as Black), White's loss rate \textit{against} the M1 Fourfour, White's frequency of use of the Fourfour, the number of past games Black has seen the Fourfour used, whether or not Black lost the last time someone used an M1 Fourfour on him, and the handicap of game $i$.
 
-This model was first fit using the lme4 package in the R language and by Hamiltonian Monte Carlo via the STAN software package called by the glmer2stan command (McElreath 2013), running 5,000 iterations with a 1,000 iteration burn-in. Convergence of chains was determined by the R-hat Gelman & Rubin diagnostic \citep{stan2013stan} and by visual inspection of the chains.
+This model was first fit using the lme4 package in the R language and by Hamiltonian Monte Carlo via the STAN software package called by the glmer2stan command (McElreath 2013), running 5,000 iterations with a 1,000 iteration burn-in. Convergence of chains was determined by the R-hat Gelman \& Rubin diagnostic \citep{stan2013stan} and by visual inspection of the chains.
 
 \end{document}

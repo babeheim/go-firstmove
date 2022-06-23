@@ -3,9 +3,9 @@
 [x] upgrade sgf processing to kaya (its just missing some games)
 [x] migrate rmarkdown to latex + rewrite the calcs objects to be latex commands
 
-[-] work harder to save more games in 1_prep_data
-[-] confirm everything works on the cluster 
+[x] work harder to save more games in 1_prep_data
 [x] update readme
+[-] confirm everything works on the cluster 
 
 [!] convert figures from pdf to tikz
 [!] convert rstan to cmdstan, plus all posterior calls with {posterior}
