@@ -70,7 +70,7 @@ b_post <- as.data.frame(sam[c("a", "b_ind_use", "b_ind_use_x_ind_use_win",
   "b_pop_use_x_ind_win", "b_pop_use_win", "b_komi")])
 # this seems unnecessary
 
-my_names <- c("a", "Personal Fourfour Use Rate ($\\beta$)",
+my_names <- c("Intercept", "Personal Fourfour Use Rate ($\\beta$)",
   "$\\times$ Personal Fourfour Win Rate",
   "$\\times$ Personal Win Rate",
   "Personal Fourfour Win Rate",
