@@ -49,6 +49,13 @@ Thumbs.db
 *.robj
 *.RDS
 
+# latex kruft
+*.aux
+*.bbl
+*.blg
+*.out
+*.pdf
+
 */inputs
 */output
 */temp
