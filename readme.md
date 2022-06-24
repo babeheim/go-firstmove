@@ -10,7 +10,6 @@ DOI: http://dx.doi.org/10.1016/j.evolhumbehav.2014.04.001
 - rethinking package (v1.59 or greater), http://xcelab.net/rm/software/
 - rstan package
 - tictoc package (for timing analysis steps)
-- knitr package (for final manuscript creation)
 - RColorBrewer package (for figures)
 - testthat package (for reproducibility diagnostics)
 - LaTeX, https://www.latex-project.org/
@@ -29,7 +28,7 @@ The `raw_data/` folder contains two files from which all calculations are derive
 
 - `gogod_database.csv` - game information for the professional Go games used in this analysis, drawn from the [Games of Go on Disk](https://gogodonline.co.uk/) (GoGoD) database, 2009 edition. This database is commercially available for a small fee.
 
-- `players.csv` - a list biographical details of the professional Go players in our database, compiled from (Sensei's Library)[https://senseis.xmp.net/] in 2010-2011.
+- `players.csv` - a list biographical details of the professional Go players in our database, compiled from [Sensei's Library](https://senseis.xmp.net/) in 2010-2011.
 
 The analysis itself is broken up into independent modules that pass outputs to each other. The whole process runs by typing one command into R,
 
