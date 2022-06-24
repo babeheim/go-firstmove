@@ -55,6 +55,8 @@ Thumbs.db
 *.blg
 *.out
 *.pdf
+*.fdb_latexmk
+*.fls
 
 */inputs
 */output

@@ -118,6 +118,19 @@ frq_win_cor <- cor(d$fourfour_frq[tar], d$fourfour_win_frq[tar] - d$threefour_wi
 calcs$corFourFourFrqWin <- sprintf("%.2f", frq_win_cor)
 calcs$nGames <- format(nrow(games), big.mark = ",", trim = TRUE)
 
+calcs$nGamesTakemiya <- format(sum(games$PB == "Takemiya Masaki"), big.mark = ",", trim = TRUE)
+calcs$nGamesTakemiyaNoFourFour <- format(sum(games$PB == "Takemiya Masaki" & games$fourfour == 0), big.mark = ",", trim = TRUE)
+
+win_rate_black_takemiya <- mean(games$black_won[which(games$PB == "Takemiya Masaki" & games$year %in% 1968:1972)])
+
+calcs$winRateBlackTakemiya <- sprintf("%1.0f", 100 * win_rate_black_takemiya)
+
+win_rate_black <- mean(games$black_won[which(games$year %in% 1968:1972)])
+
+calcs$winRateBlack <- sprintf("%1.0f", 100 * win_rate_black)
+
+
+
 writeLines(prep_latex_variables(calcs), "figures/gameDescriptives.tex")
 
 

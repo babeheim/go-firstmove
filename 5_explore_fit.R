@@ -21,9 +21,21 @@ print("calculate key numerical results and save to disk")
 
 calcs <- list()
 
+calcs$nGamesExcluded <- format(nrow(d), big.mark = ",", trim = TRUE)
+
+calcs$nIterations <- format(n_iter, big.mark = ",", trim = TRUE)
+calcs$nBurnIn <- format(floor(n_iter/2), big.mark = ",", trim = TRUE)
+
+calcs$nChinesePlayers <- length(unique(d$PB[which(d$BN == "Chinese")]))
+calcs$nJapanesePlayers <- length(unique(d$PB[which(d$BN == "Japanese")]))
+calcs$nKoreanPlayers <- length(unique(d$PB[which(d$BN == "Korean")]))
+calcs$nTaiwanesePlayers <- length(unique(d$PB[which(d$BN == "Taiwanese")]))
+
 # model intercept of 53.2%
 post_logodds <- sam$a
 calcs$prIndUseBaseline <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
+
+calcs$betaIndUse <- sprintf("%.2f", mean(sam$b_ind_use))
 
 # recent personal use predicts current use; 60% use outcome is 58.7% (OR 9.39 ????) ceteris paribus
 post_logodds <- sam$a + sam$b_ind_use * 0.1
