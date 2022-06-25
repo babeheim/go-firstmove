@@ -8,8 +8,6 @@ print("extract raw data")
 
 have_raw_dataset <- file.exists("raw_data/GoGoD CD 2009.zip")
 
-have_raw_dataset <- FALSE
-
 if (have_raw_dataset) {
 
   # this script requires access to the 2009 GoGoD CD, here stored as a zip file
@@ -142,7 +140,7 @@ if (have_raw_dataset) {
 
   raw_sgfs <- list.files("./temp/Go CD/Database", full.names = TRUE, recursive = TRUE, pattern = "*\\.sgf$")
 
-  expect_true(length(raw_sgfs) == 60350)
+  stopifnot(length(raw_sgfs) == 60350)
 
   renamed_sgfs <- rep(NA, length(raw_sgfs))
   for (i in seq_along(raw_sgfs)) {
