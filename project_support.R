@@ -9,7 +9,7 @@ library(digest)
 stopifnot(capabilities("png"))
 stopifnot(capabilities("cairo"))
 
-scaffold <- TRUE
+scaffold <- FALSE
 n_iter <- 2000
 
 source("R/misc_functions.R")
