@@ -44,8 +44,6 @@ games$second_dc <- first_move == "pd" & second_move == "dc" |
                    first_move == "dp" & second_move == "pq" |
                    first_move == "pp" & second_move == "qd"
 
-games$black_won <- substr(games$RE, 1, 1) %in% "B"
-
 
 
 print("calculate annual frequencies")

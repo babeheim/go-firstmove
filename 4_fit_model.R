@@ -10,11 +10,6 @@ stopifnot(nrow(d) == 31756)
 
 n_age_groups <- length(unique(d$age_group))
 
-# n_obs <- 100
-# keep <- sample(1:nrow(d), n_obs)
-# d <- d[keep,]
-# d$ind <- match(d$ind, unique(d$ind))
-
 print("fit model to data")
 
 # fit the 24 month model
@@ -25,7 +20,7 @@ dat_list <- list(
   ind_use = d$ind_use,
   pop_use = d$pop_use,
   ind = d$ind,
-  age_group = d$age_group,
+  age = d$age_group,
   ind_use_x_ind_use_win = d$ind_use_x_ind_use_win,
   ind_use_x_ind_win = d$ind_use_x_ind_win,
   ind_use_win = d$ind_use_win,
@@ -33,9 +28,8 @@ dat_list <- list(
   pop_use_x_ind_win = d$pop_use_x_ind_win,
   pop_use_win = d$pop_use_win,
   komi = d$komi,
-  bin_total = rep(1, nrow(d)),
   N_ind = length(unique(d$ind)),
-  N_age_group = n_age_groups
+  N_ages = n_age_groups
 )
 
 horizon24 <- stan(file = "horizon24.stan", data = dat_list,
