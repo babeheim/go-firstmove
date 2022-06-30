@@ -1,7 +1,8 @@
 
-library(rethinking)   # github.com/rmcelreath/kaya
+library(rethinking)   # github.com/rmcelreath/rethinking
 library(kaya)         # github.com/babeheim/kaya
-library(rstan)
+library(cmdstanr)
+library(posterior)
 library(RColorBrewer)
 library(tictoc)
 library(digest)
@@ -9,8 +10,18 @@ library(digest)
 stopifnot(capabilities("png"))
 stopifnot(capabilities("cairo"))
 
-scaffold <- FALSE
-n_iter <- 2000
-machine_name <- "mpi-mac-mini"
+machine_name <- "thinkpad x390"
+scaffold <- TRUE
+n_iter <- 1000
+n_chains <- 4
+adapt_delta <- 0.9
+project_seed <- 1
+
+set.seed(project_seed)
+
+options(warnPartialMatchDollar=TRUE)
 
 source("R/misc_functions.R")
+
+cmdstan_models <- list()
+cmdstan_models[["horizon24"]] <- cmdstan_model("horizon24.stan")

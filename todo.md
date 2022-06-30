@@ -8,7 +8,8 @@
 [x] confirm everything works on the cluster 
 
 [x] fix the missing covariate in the age vary term 
+[x] convert rstan to cmdstan, plus all posterior calls with {posterior}
+
 [-] write a brms version of the model, compare timings
 
-[!] convert figures from pdf to tikz
-[!] convert rstan to cmdstan, plus all posterior calls with {posterior}
+[!] convert figures from pdf to tikz (meh)

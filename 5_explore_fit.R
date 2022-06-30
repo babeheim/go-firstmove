@@ -11,8 +11,8 @@ print("load fitted models")
 d <- read.csv("first_moves.csv")
 stopifnot(nrow(d) == 31756)
 
-load("horizon24.RData")
-sam <- extract(horizon24)
+fit <- readRDS("horizon24.RDS")
+sam <- as_draws_rvars(fit$draws())
 
 
 
@@ -30,41 +30,51 @@ calcs$nJapanesePlayers <- length(unique(d$PB[which(d$BN == "Japanese")]))
 calcs$nKoreanPlayers <- length(unique(d$PB[which(d$BN == "Korean")]))
 calcs$nTaiwanesePlayers <- length(unique(d$PB[which(d$BN == "Taiwanese")]))
 
-post_logodds <- sam$a
+post_logodds <- draws_of(sam$a)
 calcs$prIndUseBaseline <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
 
-calcs$betaIndUse <- sprintf("%.2f", mean(sam$b_ind_use))
+calcs$betaIndUse <- sprintf("%.2f", mean(draws_of(sam$b_ind_use)))
 
-post_logodds <- sam$a + sam$b_ind_use * 0.1
+post_logodds <- draws_of(sam$a) + draws_of(sam$b_ind_use) * 0.1
 calcs$prIndUseSixty <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
-calcs$orIndUse <- sprintf("%.2f", mean(sam$b_ind_use))
+calcs$orIndUse <- sprintf("%.2f", mean(draws_of(sam$b_ind_use)))
 
-post_logodds <- sam$a + sam$b_ind_use * 0.1
-calcs$orIndUseWin <- sprintf("%.2f", mean(exp(sam$b_ind_use_win)))
+post_logodds <- draws_of(sam$a) + draws_of(sam$b_ind_use) * 0.1
+calcs$orIndUseWin <- sprintf("%.2f", mean(exp(draws_of(sam$b_ind_use_win))))
 
-post_logodds <- sam$a + sam$b_pop_use * 0.1
+post_logodds <- draws_of(sam$a) + draws_of(sam$b_pop_use) * 0.1
 calcs$prPopUseSixty <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
-calcs$orPopUse <- sprintf("%.2f", mean(exp(sam$b_pop_use)))
+calcs$orPopUse <- sprintf("%.2f", mean(exp(draws_of(sam$b_pop_use))))
 
-post_logodds <- sam$a + sam$b_pop_use * 0.1 + sam$b_pop_use_win * 0.1 + sam$b_pop_use_x_pop_use_win * 0.1 * 0.1
+post_logodds <- draws_of(sam$a) + draws_of(sam$b_pop_use) * 0.1 + draws_of(sam$b_pop_use_win) * 0.1 + draws_of(sam$b_pop_use_x_pop_use_win) * 0.1 * 0.1
 calcs$prPopUseSixtyWinTen <- sprintf("%.1f", mean(logistic(post_logodds) * 100))
 
-social_indy_ratio <- sam$b_pop_use / sam$b_ind_use
+social_indy_ratio <- draws_of(sam$b_pop_use) / draws_of(sam$b_ind_use)
 calcs$socialIndyRatio <- sprintf("%.2f", mean(social_indy_ratio))
 
-calcs$playerIndyVaref <- sprintf("%.2f", mean(sam$sigma_ind_use_ind))
+calcs$playerIndyVaref <- sprintf("%.2f", mean(draws_of(sam$sigma_ind_use_ind)))
 
-calcs$playerSocialVaref <- sprintf("%.2f", mean(sam$sigma_pop_use_ind))
+calcs$playerSocialVaref <- sprintf("%.2f", mean(draws_of(sam$sigma_pop_use_ind)))
 
 writeLines(prep_latex_variables(calcs), "./figures/keyModelCalcs.tex")
 
 
+# ugh, just start over agian once u have the cmdstan model...
 
-print("extract posterior estimates and create table of model estimates")
+# print("extract posterior estimates and create table of model estimates")
 
-b_post <- as.data.frame(sam[c("a", "b_ind_use", "b_ind_use_x_ind_use_win",
-  "b_ind_use_x_ind_win", "b_ind_use_win", "b_pop_use", "b_pop_use_x_pop_use_win",
-  "b_pop_use_x_ind_win", "b_pop_use_win", "b_komi")])
+b_post <- data.frame(
+  a = draws_of(sam["a"]),
+  b_ind_use = draws_of(sam["b_ind_use"]),
+  b_ind_use_x_ind_use_win = draws_of(sam["b_ind_use_x_ind_use_win"]),
+  b_ind_use_x_ind_win = draws_of(sam["b_ind_use_x_ind_win"]),
+  b_ind_use_win = draws_of(sam["b_ind_use_win"]),
+  b_pop_use = draws_of(sam["b_pop_use"]),
+  b_pop_use_x_pop_use_win = draws_of(sam["b_pop_use_x_pop_use_win"]),
+  b_pop_use_x_ind_win = draws_of(sam["b_pop_use_x_ind_win"]),
+  b_pop_use_win = draws_of(sam["b_pop_use_win"]),
+  b_komi = draws_of(sam["b_komi"])
+)
 
 my_names <- c("Intercept",
   "Personal Fourfour Use Rate ($\\beta$)",
@@ -130,8 +140,8 @@ grp_labels <- c("Chinese", "Japanese", "South Korean", "Taiwanese")
 for (i in 1:length(grps)) {
   grp_cols <- sort(unique(d$ind[d$BN == grps[i]]))
   grp_n <- length(grp_cols)
-  grp_beta_intercepts <- colMeans(sam$vary_ind[ , grp_cols, 2])
-  grp_gamma_intercepts <- colMeans(sam$vary_ind[ , grp_cols, 3])
+  grp_beta_intercepts <- colMeans(draws_of(sam$vary_ind[grp_cols, 2]))
+  grp_gamma_intercepts <- colMeans(draws_of(sam$vary_ind[grp_cols, 3]))
 
   add <- data.frame(
     label = grp_labels[i],
@@ -187,9 +197,9 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as.numeric(sam$a + sam$b_pop_use * x +
-    sam$b_ind_use * per_use + sam$b_pop_use_win * perf +
-    sam$b_pop_use_x_pop_use_win * x * perf)
+  est <- as.numeric(draws_of(sam$a) + draws_of(sam$b_pop_use) * x +
+    draws_of(sam$b_ind_use) * per_use + draws_of(sam$b_pop_use_win) * perf +
+    draws_of(sam$b_pop_use_x_pop_use_win) * x * perf)
   my_mean[i] <- logistic(mean(est))
   lb[i] <- logistic(HPDI(est)[1])
   ub[i] <- logistic(HPDI(est)[2])
@@ -208,9 +218,9 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as.numeric(sam$a + sam$b_pop_use * x +
-    sam$b_ind_use * per_use + sam$b_pop_use_win * perf +
-    sam$b_pop_use_x_pop_use_win * x * perf)
+  est <- as.numeric(draws_of(sam$a) + draws_of(sam$b_pop_use) * x +
+    draws_of(sam$b_ind_use) * per_use + draws_of(sam$b_pop_use_win) * perf +
+    draws_of(sam$b_pop_use_x_pop_use_win) * x * perf)
   my_mean[i] <- logistic(mean(est))
   lb[i] <- logistic(HPDI(est)[1])
   ub[i] <- logistic(HPDI(est)[2])
@@ -227,9 +237,9 @@ lb <- NA
 ub <- NA
 for (i in 1:length(xs)) {
   x <- xs[i]
-  est <- as.numeric(sam$a + sam$b_pop_use * x +
-    sam$b_ind_use * per_use + sam$b_pop_use_win * perf +
-    sam$b_pop_use_x_pop_use_win * x * perf)
+  est <- as.numeric(draws_of(sam$a) + draws_of(sam$b_pop_use) * x +
+    draws_of(sam$b_ind_use) * per_use + draws_of(sam$b_pop_use_win) * perf +
+    draws_of(sam$b_pop_use_x_pop_use_win) * x * perf)
   my_mean[i] <- logistic(mean(est))
   lb[i] <- logistic(HPDI(est)[1])
   ub[i] <- logistic(HPDI(est)[2])
@@ -272,13 +282,13 @@ plot(c(-4, 10), c(-10, 16), col = "white", pch = 20,
 
 for (i in 1:nrow(targets)) {
   if (!is.na(targets$ind[i])) {
-  my_xs <- sam$vary_ind[thin, targets$ind[i], 2] + mean(sam$b_ind_use[thin])
-  my_ys <- sam$vary_ind[thin, targets$ind[i], 3] + mean(sam$b_pop_use[thin])
+  my_xs <- draws_of(sam$vary_ind[targets$ind[i], 2])[thin] + mean(draws_of(sam$b_ind_use)[thin])
+  my_ys <- draws_of(sam$vary_ind[targets$ind[i], 3])[thin] + mean(draws_of(sam$b_pop_use)[thin])
   points(my_xs, my_ys, col = col.alpha(targets$color[i], 0.3), pch = 20)
   }
 }
 
-points(sam$b_ind_use[thin], sam$b_pop_use[thin], pch = 20,
+points(draws_of(sam$b_ind_use)[thin], draws_of(sam$b_pop_use)[thin], pch = 20,
   col = col.alpha("black", 0.3))
 
 abline(h = 0, lty = 2, col = col.alpha("black", 0.6))
@@ -287,10 +297,10 @@ abline(0, 1, lty = 1, col = gray(0.3))
 
 for (i in 1:nrow(targets)) {
   if (!is.na(targets$ind[i])) {
-    my_x <- mean(sam$vary_ind[ , targets$ind[i], 2] +
-      sam$b_ind_use)
-    my_y <- mean(sam$vary_ind[ , targets$ind[i], 3] +
-      sam$b_pop_use)
+    my_x <- mean(draws_of(sam$vary_ind)[ , targets$ind[i], 2] +
+      draws_of(sam$b_ind_use))
+    my_y <- mean(draws_of(sam$vary_ind)[, targets$ind[i], 3] +
+      draws_of(sam$b_pop_use))
     text(my_x, my_y, targets$print_name[i])
   }
 }
@@ -298,14 +308,15 @@ for (i in 1:nrow(targets)) {
 # age 8 is "1", age 9 is "2", etc.
 n_ages <- length(unique(d$age_group))
 
-my_pop_means <- apply(sam$vary_age[ , , 2], 2, mean) + mean(sam$b_pop_use)
-my_pop_HPDI <- apply(sam$vary_age[ , , 2], 2, HPDI) + mean(sam$b_pop_use)
+my_pop_means <- apply(draws_of(sam$vary_age)[ , , 2], 2, mean) + mean(draws_of(sam$b_pop_use))
+my_pop_HPDI <- apply(draws_of(sam$vary_age)[ , , 2], 2, HPDI) + mean(draws_of(sam$b_pop_use))
 plot(my_pop_means, type = "p", ylim = c(-2, 9), xaxt = "n",
   ylab = "reliance on social information", xlab = "age (years)",
   xlim = c(3, 63), las = 1, col = "black", cex = 0.5, pch = 20)
 axis(1, at = seq(3, 78, by = 10), labels =  seq(3, 78, by = 10) + 7)
 for (i in 1:n_ages) lines(c(i, i), c(my_pop_HPDI[1, i], my_pop_HPDI[2, i]),
   col = "black")
-abline(h = mean(sam$b_pop_use), lty = 2, col = "black")
+abline(h = mean(draws_of(sam$b_pop_use)), lty = 2, col = "black")
 
 dev.off()
+
