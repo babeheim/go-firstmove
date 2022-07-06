@@ -154,7 +154,7 @@ stopifnot(length(sgfs) == 60350)
 
 # valid <- validate_sgfs(sgfs)
 
-db <- create_database_fast(sgfs, num_cores = 8)
+db <- create_database_fast(sgfs, num_cores = 6)
 
 db$filename <- gsub("./temp/clean_sgfs", "", db$filename)
 

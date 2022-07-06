@@ -1,9 +1,4 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
 # this script requires access to the 2009 GoGoD CD, here stored as a zip file
 have_raw_dataset <- file.exists("raw_data/GoGoD CD 2009.zip")
 if (have_raw_dataset) source("prep_raw_data.R")

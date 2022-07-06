@@ -10,6 +10,7 @@
 [x] fix the missing covariate in the age vary term 
 [x] convert rstan to cmdstan, plus all posterior calls with {posterior}
 
+[x] remove 'scaffold' code its dumb
 [-] write a brms version of the model, compare timings
 
 [!] convert figures from pdf to tikz (meh)

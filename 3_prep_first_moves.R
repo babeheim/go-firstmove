@@ -1,10 +1,4 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
-
 print("load game data")
 
 d <- read.csv("games.csv")

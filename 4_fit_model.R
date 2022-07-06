@@ -1,9 +1,4 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
 d <- read.csv("first_moves.csv")
 
 stopifnot(nrow(d) == 31756)

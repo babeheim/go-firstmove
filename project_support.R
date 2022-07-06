@@ -10,8 +10,7 @@ library(digest)
 stopifnot(capabilities("png"))
 stopifnot(capabilities("cairo"))
 
-machine_name <- "thinkpad x390"
-scaffold <- TRUE
+machine_name <- "mpi-mac-mini"
 n_iter <- 1000
 n_chains <- 4
 adapt_delta <- 0.9

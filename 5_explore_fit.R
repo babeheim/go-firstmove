@@ -1,9 +1,4 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
 ######
 
 print("load fitted models")
