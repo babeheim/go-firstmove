@@ -1,9 +1,4 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
 #######
 
 print("load game data")
@@ -43,8 +38,6 @@ games$second_dc <- first_move == "pd" & second_move == "dc" |
                    first_move == "dd" & second_move == "cp" |
                    first_move == "dp" & second_move == "pq" |
                    first_move == "pp" & second_move == "qd"
-
-games$black_won <- substr(games$RE, 1, 1) %in% "B"
 
 
 

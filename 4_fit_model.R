@@ -1,31 +1,21 @@
 
-if (scaffold) {
-  rm(list = ls())
-  source("project_support.R")
-}
-
 d <- read.csv("first_moves.csv")
 
 stopifnot(nrow(d) == 31756)
 
 n_age_groups <- length(unique(d$age_group))
 
-# n_obs <- 100
-# keep <- sample(1:nrow(d), n_obs)
-# d <- d[keep,]
-# d$ind <- match(d$ind, unique(d$ind))
-
 print("fit model to data")
 
 # fit the 24 month model
 
-dat_list <- list(
+stan_data <- list(
   N_games = nrow(d),
   fourfour = d$fourfour,
   ind_use = d$ind_use,
   pop_use = d$pop_use,
   ind = d$ind,
-  age_group = d$age_group,
+  age = d$age_group,
   ind_use_x_ind_use_win = d$ind_use_x_ind_use_win,
   ind_use_x_ind_win = d$ind_use_x_ind_win,
   ind_use_win = d$ind_use_win,
@@ -33,12 +23,25 @@ dat_list <- list(
   pop_use_x_ind_win = d$pop_use_x_ind_win,
   pop_use_win = d$pop_use_win,
   komi = d$komi,
-  bin_total = rep(1, nrow(d)),
   N_ind = length(unique(d$ind)),
-  N_age_group = n_age_groups
+  N_ages = n_age_groups
 )
 
-horizon24 <- stan(file = "horizon24.stan", data = dat_list,
-  iter = n_iter, chains = 3, cores = 3)
+fit <- cmdstan_models[["horizon24"]]$sample(parallel_chains = n_chains, chains = n_chains,
+  iter_warmup = floor(n_iter/2), iter_sampling = n_iter, adapt_delta = adapt_delta,
+  max_treedepth = 15, data = stan_data, step_size = 0.1,
+  refresh = 100)
 
-save(horizon24, file = "horizon24.RData")
+fit$save_object(file = paste0("horizon24.RDS"))
+
+diagnostics <- extract_diagnostics(fit)
+diagnostics$fit_name <- "horizon24"
+diagnostics$machine_name <- machine_name
+diagnostics$project_seed <- project_seed
+diagnostics$n_ind <- stan_data$N_ind
+diagnostics$n_obs <- stan_data$N_games
+diagnostics$n_iter <- n_iter
+diagnostics$chains <- n_chains
+diagnostics$adapt_delta <- adapt_delta
+diag_filename <- paste0("figures/diag_", diagnostics$fit_name, ".csv")
+write.csv(as.data.frame(diagnostics), diag_filename, row.names = FALSE)

@@ -1,4 +1,35 @@
 
+
+extract_diagnostics <- function(cmdstan_fit) {
+
+  out <- list()
+
+  diag <- cmdstan_fit$cmdstan_diagnose()$stdout
+  out$rhat_good <- grepl("Split R-hat values satisfactory all parameters.", diag)
+  out$ess_good <- grepl("Effective sample size satisfactory.", diag)
+  out$energy_good <- grepl("E-BFMI satisfactory for all transitions.", diag)
+  out$divergence_good <- grepl("No divergent transitions found.", diag)
+
+  x <- cmdstan_fit$cmdstan_summary()$stdout
+  pattern <- "Sampling took.*\\n"
+  m <- gregexpr(pattern, x, perl = TRUE)
+  sampling_time <- regmatches(x, m)[[1]]
+  sampling_time <- gsub("\\n$", "", sampling_time)
+
+  s <- sampling_time
+  s <- gsub("Sampling .*, ", "", s)
+  s <- gsub(" total", "", s)
+  units <- gsub("\\d.*\\s", "", s)
+  s <- as.numeric(gsub("\\s.*$", "", s))
+  tar <- which(units  ==  "seconds")
+  if (length(tar) > 0) s[tar] <- s[tar] / 60
+  tar <- which(units  ==  "hours")
+  if (length(tar) > 0) s[tar] <- s[tar] * 60
+  out$sampling_time_min <- round(s, 1)
+
+  return(out)
+}
+
 prep_latex_variables <- function(named_list) {
   out <- character()
   for (i in 1:length(named_list)) {
