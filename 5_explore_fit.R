@@ -54,21 +54,20 @@ calcs$playerSocialVaref <- sprintf("%.2f", mean(draws_of(sam$sigma_pop_use_ind))
 writeLines(prep_latex_variables(calcs), "./figures/keyModelCalcs.tex")
 
 
-# ugh, just start over agian once u have the cmdstan model...
 
-# print("extract posterior estimates and create table of model estimates")
+print("extract posterior estimates and create table of model estimates")
 
 b_post <- data.frame(
-  a = draws_of(sam["a"]),
-  b_ind_use = draws_of(sam["b_ind_use"]),
-  b_ind_use_x_ind_use_win = draws_of(sam["b_ind_use_x_ind_use_win"]),
-  b_ind_use_x_ind_win = draws_of(sam["b_ind_use_x_ind_win"]),
-  b_ind_use_win = draws_of(sam["b_ind_use_win"]),
-  b_pop_use = draws_of(sam["b_pop_use"]),
-  b_pop_use_x_pop_use_win = draws_of(sam["b_pop_use_x_pop_use_win"]),
-  b_pop_use_x_ind_win = draws_of(sam["b_pop_use_x_ind_win"]),
-  b_pop_use_win = draws_of(sam["b_pop_use_win"]),
-  b_komi = draws_of(sam["b_komi"])
+  a = draws_of(sam$a),
+  b_ind_use = draws_of(sam$b_ind_use),
+  b_ind_use_x_ind_use_win = draws_of(sam$b_ind_use_x_ind_use_win),
+  b_ind_use_x_ind_win = draws_of(sam$b_ind_use_x_ind_win),
+  b_ind_use_win = draws_of(sam$b_ind_use_win),
+  b_pop_use = draws_of(sam$b_pop_use),
+  b_pop_use_x_pop_use_win = draws_of(sam$b_pop_use_x_pop_use_win),
+  b_pop_use_x_ind_win = draws_of(sam$b_pop_use_x_ind_win),
+  b_pop_use_win = draws_of(sam$b_pop_use_win),
+  b_komi = draws_of(sam$b_komi)
 )
 
 my_names <- c("Intercept",

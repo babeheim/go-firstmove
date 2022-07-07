@@ -6,12 +6,13 @@ DOI: http://dx.doi.org/10.1016/j.evolhumbehav.2014.04.001
 
 # Requirements
 
-- R (3.3.1 or greater) https://cran.r-project.org/
+- R (4.1.2 or greater) https://cran.r-project.org/
 - rethinking package (v1.59 or greater), http://xcelab.net/rm/software/
-- rstan package
+- kaya package, https://github.com/babeheim/kaya
+- cmdstan package
+- posterior package
 - tictoc package (for timing analysis steps)
 - RColorBrewer package (for figures)
-- testthat package (for reproducibility diagnostics)
 - LaTeX, https://www.latex-project.org/
 
 # Instructions:
