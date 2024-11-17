@@ -1,25 +1,25 @@
  data {
   int N_games;
-  int fourfour[N_games];
-  real ind_use[N_games];
-  real pop_use[N_games];
-  int ind[N_games];
-  int age[N_games];
-  real ind_use_x_ind_use_win[N_games];
-  real ind_use_x_ind_win[N_games];
-  real ind_use_win[N_games];
-  real pop_use_x_pop_use_win[N_games];
-  real pop_use_x_ind_win[N_games];
-  real pop_use_win[N_games];
-  real komi[N_games];
+  array[N_games] int fourfour;
+  array[N_games] real ind_use;
+  array[N_games] real pop_use;
+  array[N_games] int ind;
+  array[N_games] int age;
+  array[N_games] real ind_use_x_ind_use_win;
+  array[N_games] real ind_use_x_ind_win;
+  array[N_games] real ind_use_win;
+  array[N_games] real pop_use_x_pop_use_win;
+  array[N_games] real pop_use_x_ind_win;
+  array[N_games] real pop_use_win;
+  array[N_games] real komi;
   int N_ind;
   int N_ages;
 }
 
 transformed data {
-  vector[3] vary_ind_mu[N_ind];
+  array[N_ind] vector[3] vary_ind_mu;
+  array[N_ages] vector[2] vary_age_mu;
   for (i in 1:N_ind) vary_ind_mu[i] = rep_vector(0, 3);
-  vector[2] vary_age_mu[N_ages];
   for (i in 1:N_ages) vary_age_mu[i] = rep_vector(0, 2);
 }
 
@@ -35,13 +35,13 @@ parameters {
   real b_pop_use_win;
   real b_komi;
 
-  vector[3] vary_ind[N_ind];
+  array[N_ind] vector[3] vary_ind;
   real<lower=0> sigma_a_ind;
   real<lower=0> sigma_ind_use_ind;
   real<lower=0> sigma_pop_use_ind;
   cholesky_factor_corr[3] L_Omega_ind;
 
-  vector[2] vary_age[N_ages];
+  array[N_ages] vector[2] vary_age;
   real<lower=0> sigma_ind_use_age;
   real<lower=0> sigma_pop_use_age;
   cholesky_factor_corr[2] L_Omega_age;
