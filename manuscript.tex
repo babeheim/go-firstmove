@@ -1,94 +1,46 @@
-\documentclass[reqno,12pt]{amsart}
-\usepackage[foot]{amsaddr}
-\usepackage{graphicx}
-\usepackage[usenames,dvipsnames]{xcolor}
-\usepackage[paperwidth=8.5in,paperheight=11in,text={6in,9in},left=1.25in,top=1in,headheight=0.25in,headsep=0.4in,footskip=0.4in]{geometry}
+\documentclass[12pt]{article}
+\usepackage{natbib} % our bibliography system 
+\usepackage{graphicx} % allows graphics
+\usepackage{hyperref} % for adding color and clickable links to references
+\usepackage{amsmath} % allows numbered equations, for one thing
+\usepackage{mdframed} % for framed text boxes; does not play well with lineno
+\usepackage{authblk} % to add more authors
 
-\usepackage[authoryear]{natbib}
+\usepackage[letterpaper, total={6in, 8in}]{geometry}
 
-% \bibpunct[, ]{}{}{,}{s}{}{,}
-\bibpunct[, ]{(}{)}{,}{a}{}{,}
-%change s to a, and put open and closed parentheses in first two bracketed arguments for author-year citations
+\usepackage[dvipsnames]{xcolor} % adds 68 named colors and the ability to define your own, but can cause trouble with beamer and tikz; tikz must be declared after this
 
-\usepackage{subfigure}
-\usepackage{threeparttable}
+\usepackage{mathpazo} % URW Palladio, from Palatino
+\usepackage{microtype} % cleans up the kerning and hypenation
+\usepackage[margin=15pt,font=small,labelfont={bf}]{caption} % cleans up the structure of the captions
 
-
-\DeclareMathOperator{\var}{var}
-\DeclareMathOperator{\cov}{cov}
-\DeclareMathOperator{\E}{E}
-
-
-%get rid of red link boxes
-\usepackage{hyperref}
-%\usepackage{endfloat}
+% configuration of {hyperref} package
 \hypersetup{
-    colorlinks,
-    linkcolor={red!80!black},
-    citecolor={blue!90!black},
-    urlcolor={blue!90!black}
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
 }
-
-%gives ability to fix figure locations with H
-\usepackage{float}
-
-
-\synctex=1
-
-
-\usepackage{amsmath}
-\usepackage{mathspec}
-\usepackage{units}
-\usepackage{xltxtra}
-\usepackage{xunicode}
-\defaultfontfeatures{Mapping=tex-text}
-
-% \definecolor{linenocolor}{gray}{0.5}
-% \renewcommand\thelinenumber{\color{linenocolor}\arabic{linenumber}}
-
-\usepackage{fix-cm}
-
-\setcounter{totalnumber}{10}
-
-\newcommand{\mr}{\mathrm}
-\usepackage{hyperref}
-\usepackage[normalem]{ulem}
-\useunder{\uline}{\ul}{}
-\makeatletter
-\newenvironment{startquote}[2][2em]
-  {\setlength{\@tempdima}{#1}%
-   \def\chapquote@author{#2}%
-   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
-   \itshape}
-  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
-\makeatother
 
 \input{figures/gameDescriptives.tex}
 \input{figures/keyModelCalcs.tex}
 
-
-\title[STRATEGIC SOCIAL LEARNING]
-{\large STRATEGIC SOCIAL LEARNING AND THE POPULATION DYNAMICS OF HUMAN BEHAVIOR:
-THE GAME OF GO}
-\author{Bret A. Beheim\(^1\), Calvin Thigpen\(^2\), Richard McElreath\(^3\)}
-\address{\(^1\)Department of Anthropology, University of New Mexico.
-\(^2\)Institute for Transportation Studies, University of California,
-Davis. \(^3\) Department of Anthropology, University of California,
-Davis}
-\email{beheim@gmail.com}
+\title{Strategic Social Learning and the Population Dynamics of Human Behavior: The Game of Go}
+\author[1]{Bret A. Beheim\thanks{beheim@gmail.com}}
+\author[2]{Calvin Thigpen}
+\author[3]{Richard McElreath}
+\affil[1]{\small Department of Anthropology, University of New Mexico}
+\affil[2]{\small Institute for Transportation Studies, University of California, Davis}
+\affil[3]{\small Department of Anthropology, University of California, Davis}
 \date{March 28, 2014}
 
 \begin{document}
 
 \maketitle
 
-\noindent\textsc{Abstract.}
+\begin{abstract}
 Human culture is widely believed to undergo evolution, via mechanisms rooted in the nature of human cognition. A number of theories predict the kinds of human learning strategies, as well as the population dynamics that result from their action. There is little work, however, that quantitatively examines the evidence for these strategies and resulting cultural evolution within human populations. One of the obstacles is the lack of individual-level data with which to link transmission events to larger cultural dynamics. Here, we address this problem with a rich quantitative database from the East Asian board game known as Go. We draw from a large archive of Go games spanning the last six decades of professional play, and find evidence that the evolutionary dynamics of particular cultural variants are driven by a mix of individual and social learning processes. Particular players vary dramatically in their sensitivity to population knowledge, which also varies by age and nationality. The dynamic patterns of opening Go moves are consistent with an ancient, ongoing arms race within the game itself.
-
-\vspace{12pt}
-
-\vspace{24pt}
-
+\end{abstract}
 
 \section{Introduction}
 
@@ -148,7 +100,7 @@ As shown in Fig.\;\ref{fig:m1FreqsWins}, we can see such dynamics of the very fi
 
 After a brief enthusiasm for the Threethree in the 1960s, the Fourfour rose to dominance, peaking in 1977 (appearing in 78\% of games played) and again in 1996 (82\% of games played). The primary goal of this analysis is to understand why this pattern exists, and what processes are driving evolution at M1.
 
-We can trace the rapid diffusion of the Fourfour during this time back to the success of a single innovator, Japanese professional Takemiya Masaki. Beginning his pro career at the age of 14 in the 1960s, Takemiya has used the Fourfour almost exclusively; of his \nGamesTakemiya{} games as Black in the database, only six do not start with the Fourfour. Takemiya's novel use of this variant in 1968 marks the beginning of its spread within the broader Go community, and his personal performance for the next five years (\winRateBlackTakemiya\%) also exceeded the average Black win rate (\winRateBlack\%).
+We can trace the rapid diffusion of the Fourfour during this time back to the success of a single innovator, Japanese professional Take-\\miya Masaki. Beginning his pro career at the age of 14 in the 1960s, Takemiya has used the Fourfour almost exclusively; of his \nGamesTakemiya{} games as Black in the database, only six do not start with the Fourfour. Takemiya's novel use of this variant in 1968 marks the beginning of its spread within the broader Go community, and his personal performance for the next five years (\winRateBlackTakemiya\%) also exceeded the average Black win rate (\winRateBlack\%).
 
 Subsequent to Takemiya's arrival, the success of the Fourfour appears to have prompted an innovation race in White's Move 2 response. Before 1970, White's response to the Fourfour was almost always a Threefour on an adjacent corner. If we imagine the M1 Fourfour is played in the upper right quadrant (SGF coordinate \textit{pd}), nearly 80\% of the time the M2 response in the late 1960s was coordinate \textit{dc} (Fig.\;\ref{fig:m2FreqsWins}). By 1977, at the Fourfour's first peak, the \textit{dc} response declined to about 30\% of games. In the interim, M2 variants at \textit{dp}, \textit{cq} and \textit{dd} all became established in rapid sequence. As measured by the proportion of games White won, \textit{dp} and \textit{cq} both consistently outperformed \textit{dc} in the 1970s, blunting the Fourfour's effectiveness and anticipating its decline in use after 1977.
 
@@ -165,11 +117,10 @@ At the same time, the complexity of the game, dynamic strategy space, and high c
 Theoretical models and experiments have focused on two important forms of such strategic social learning: frequency-dependent and success-biased transmission \citep{boyd1985culture, mcelreath2008successbias}. Frequency-dependence is one of the simplest kinds of social learning, in which learners use the popularity of different behaviors to decide which to adopt. It can arise through an unbiased or biased sampling scheme, and by copying the behavior of others, individuals can quickly and cheaply acquire useful information that would otherwise require costly individual learning.
 
 \begin{figure}[t]
-  \begin{center}
+  \centering
     \includegraphics[scale=1.2]{./figures/pr44xPop.pdf}
     \caption{Predicted probability of using the Fourfour by an average player at different values of population use, with means (dotted lines) and 95\% HPDI (solid regions). Per Table \ref{table:pr44_logistic_coefs}, the relative win rate of the Fourfour within the population regulates the effect of population use, -10\% versus the Threefour (orange), equal to the Threefour (light blue) and +10\% (dark blue). Outcome data is also shown via scatterplot.}
     \label{fig:pr44}
-  \end{center}
 \end{figure}
 
 Success-biased social learning exploits the correlation between behaviors and outcomes, so that a move that is associated with greater success among others may be favored simply for that reason, regardless of who is using it, how popular it is, or whether the learner really understands why it works.
@@ -195,7 +146,7 @@ Predictor variables for each game used a retrospective two-year window from the 
 
 \begin{figure}[t]
   \begin{center}
-    \includegraphics[scale=0.8]{./figures/playerAgeBetaGamma.pdf}
+    \includegraphics[scale=0.65]{./figures/playerAgeBetaGamma.pdf}
     \caption{(\textit{left}) Six player-specific joint posterior densities of the importance of individual ($\beta_j$) and social ($\gamma_j$) information on predicting move outcome, along with the main effect density (black region). Players who lie above the line of equality (solid gray) are more predicted by recent population trends than individual experience, while the reverse is true for players below it. (\textit{right}) Estimates for the importance of social knowledge for each year of age $k$, showing means and 95\% HPDI intervals. Younger players tend to have values of $\gamma_k$ above the main effect mean $\gamma$ (dotted), but this declines as they age.}
   \label{fig:playerAgeBetaGamma}
   \end{center}
