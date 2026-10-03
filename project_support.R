@@ -6,6 +6,7 @@ library(posterior)
 library(RColorBrewer)
 library(tictoc)
 library(digest)
+library(dplyr)
 
 stopifnot(capabilities("png"))
 stopifnot(capabilities("cairo"))

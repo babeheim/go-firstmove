@@ -71,8 +71,8 @@ for (i in 1:n_games) {
 
 print("reduce table and simplify variable names")
 
-d <- rename(d, age = black_age)
-d <- select(d, DT, PB, BN, komi, black_won, fourfour, age, ind_use, ind_win, ind_use_win, pop_use, pop_use_win, pop_win)
+d <- dplyr::rename(d, age = black_age)
+d <- dplyr::select(d, DT, PB, BN, komi, black_won, fourfour, age, ind_use, ind_win, ind_use_win, pop_use, pop_use_win, pop_win)
 
 print("drop all remaining games outside horizon cutoffs, or missing values")
 
