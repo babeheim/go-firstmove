@@ -1,7 +1,6 @@
 
 rm(list = ls())
 
-
 restore_environment <- function(project = ".") {
 
   project <- normalizePath(
@@ -89,9 +88,9 @@ project_root <- normalizePath(
 
 restore_environment(project_root)
 
-source("project_support.R")
-
 tic("run go-firstmove project")
+
+source("./0_init_project.R")
 
 ##############
 
