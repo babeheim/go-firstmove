@@ -1,5 +1,9 @@
 
 library(rethinking)   # github.com/rmcelreath/rethinking
+# Additional package dependencies not discoverable from package metadata.
+# rethinking::ulam() uses digest internally but rethinking does not
+# currently declare digest in DESCRIPTION.
+requireNamespace("digest")
 library(kaya)         # github.com/babeheim/kaya
 library(cmdstanr)
 library(posterior)
