@@ -89,6 +89,7 @@ project_root <- normalizePath(
 
 restore_environment(project_root)
 
+source("project_support.R")
 
 tic("run go-firstmove project")
 
