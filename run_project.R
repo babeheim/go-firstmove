@@ -88,9 +88,9 @@ project_root <- normalizePath(
 
 restore_environment(project_root)
 
-tic("run go-firstmove project")
-
 source("./0_init_project.R")
+
+tic("run go-firstmove project")
 
 ##############
 
